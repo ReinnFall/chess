@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -10,7 +13,40 @@ public class ChessBoard {
     private ChessPiece[][] boardArray;
 
     public ChessBoard() {
-        
+        boardArray = new ChessPiece[8][8];
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(boardArray, that.boardArray);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(boardArray);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder combinedString = new StringBuilder();
+
+        for (int i = 0; i < 8; i++){
+            for (int j = 0; j < 8; j++){
+                if(boardArray[i][j] == null){
+                    combinedString.append("null").append(" ");
+                }
+                else{
+                    combinedString.append(boardArray[i][j].getPieceType()).append(" ").append(boardArray[i][j].getTeamColor()).append(" ");
+                }
+
+            }
+            combinedString.append("\n");
+        }
+        return combinedString.toString();
     }
 
     /**
@@ -58,9 +94,9 @@ public class ChessBoard {
 
         /* Knights */
         boardArray[0][1] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
-        boardArray[0][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+        boardArray[0][6] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
         boardArray[7][1] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
-        boardArray[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+        boardArray[7][6] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
 
         /* Bishops */
         boardArray[0][2] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
@@ -69,12 +105,12 @@ public class ChessBoard {
         boardArray[7][5] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
 
         /* Kings */
-        boardArray[0][3] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
-        boardArray[7][3] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
+        boardArray[0][4] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING);
+        boardArray[7][4] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING);
 
         /* Queens */
-        boardArray[0][4] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
-        boardArray[7][0] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+        boardArray[0][3] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        boardArray[7][3] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
 
         /* Empty Space */
         for (int i = 2; i < 6; i++){
