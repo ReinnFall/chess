@@ -120,32 +120,34 @@ public class ChessPiece {
                 }
                 if (myPosition.getColumn() != 1){
                     ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.WHITE ) {
+                    if(board.getPiece(pieceDiagonalLeft) != null ) {
+                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.WHITE){
+                            ChessMove diagonalLeftPromoQueen = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.QUEEN);
+                            ChessMove diagonalLeftPromoRook = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.ROOK);
+                            ChessMove diagonalLeftPromoBishop = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.BISHOP);
+                            ChessMove diagonalLeftPromoKnight = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.KNIGHT);
 
-                        ChessMove diagonalLeftPromoQueen = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.QUEEN);
-                        ChessMove diagonalLeftPromoRook = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.ROOK);
-                        ChessMove diagonalLeftPromoBishop = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.BISHOP);
-                        ChessMove diagonalLeftPromoKnight = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.KNIGHT);
-
-                        possibleMoves.add(diagonalLeftPromoQueen);
-                        possibleMoves.add(diagonalLeftPromoRook);
-                        possibleMoves.add(diagonalLeftPromoKnight);
-                        possibleMoves.add(diagonalLeftPromoBishop);
+                            possibleMoves.add(diagonalLeftPromoQueen);
+                            possibleMoves.add(diagonalLeftPromoRook);
+                            possibleMoves.add(diagonalLeftPromoKnight);
+                            possibleMoves.add(diagonalLeftPromoBishop);
+                        }
                     }
                 }
                 if (myPosition.getColumn() != 8){
                     ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.WHITE ) {
+                    if(board.getPiece(pieceDiagonalRight) != null) {
+                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.WHITE ) {
+                            ChessMove diagonalRightPromoQueen = new ChessMove(myPosition, pieceDiagonalRight, PieceType.QUEEN);
+                            ChessMove diagonalRightPromoRook = new ChessMove(myPosition, pieceDiagonalRight, PieceType.ROOK);
+                            ChessMove diagonalRightPromoBishop = new ChessMove(myPosition, pieceDiagonalRight, PieceType.BISHOP);
+                            ChessMove diagonalRightPromoKnight = new ChessMove(myPosition, pieceDiagonalRight, PieceType.KNIGHT);
 
-                        ChessMove diagonalRightPromoQueen = new ChessMove(myPosition,pieceDiagonalRight,PieceType.QUEEN);
-                        ChessMove diagonalRightPromoRook = new ChessMove(myPosition,pieceDiagonalRight,PieceType.ROOK);
-                        ChessMove diagonalRightPromoBishop = new ChessMove(myPosition,pieceDiagonalRight,PieceType.BISHOP);
-                        ChessMove diagonalRightPromoKnight = new ChessMove(myPosition,pieceDiagonalRight,PieceType.KNIGHT);
-
-                        possibleMoves.add(diagonalRightPromoQueen);
-                        possibleMoves.add(diagonalRightPromoRook);
-                        possibleMoves.add(diagonalRightPromoKnight);
-                        possibleMoves.add(diagonalRightPromoBishop);
+                            possibleMoves.add(diagonalRightPromoQueen);
+                            possibleMoves.add(diagonalRightPromoRook);
+                            possibleMoves.add(diagonalRightPromoKnight);
+                            possibleMoves.add(diagonalRightPromoBishop);
+                        }
                     }
                 }
             }
@@ -167,32 +169,35 @@ public class ChessPiece {
                 }
                 if (myPosition.getColumn() != 1){
                     ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.BLACK ) {
+                    if(board.getPiece(pieceDiagonalLeft) != null ) {
+                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.BLACK ) {
+                            ChessMove diagonalLeftPromoQueen = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.QUEEN);
+                            ChessMove diagonalLeftPromoRook = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.ROOK);
+                            ChessMove diagonalLeftPromoBishop = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.BISHOP);
+                            ChessMove diagonalLeftPromoKnight = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.KNIGHT);
 
-                        ChessMove diagonalLeftPromoQueen = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.QUEEN);
-                        ChessMove diagonalLeftPromoRook = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.ROOK);
-                        ChessMove diagonalLeftPromoBishop = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.BISHOP);
-                        ChessMove diagonalLeftPromoKnight = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.KNIGHT);
-
-                        possibleMoves.add(diagonalLeftPromoQueen);
-                        possibleMoves.add(diagonalLeftPromoRook);
-                        possibleMoves.add(diagonalLeftPromoKnight);
-                        possibleMoves.add(diagonalLeftPromoBishop);
+                            possibleMoves.add(diagonalLeftPromoQueen);
+                            possibleMoves.add(diagonalLeftPromoRook);
+                            possibleMoves.add(diagonalLeftPromoKnight);
+                            possibleMoves.add(diagonalLeftPromoBishop);
+                        }
                     }
                 }
                 if (myPosition.getColumn() != 8){
                     ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.BLACK ) {
+                    if(board.getPiece(pieceDiagonalRight) != null) {
+                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.BLACK ) {
 
-                        ChessMove diagonalRightPromoQueen = new ChessMove(myPosition,pieceDiagonalRight,PieceType.QUEEN);
-                        ChessMove diagonalRightPromoRook = new ChessMove(myPosition,pieceDiagonalRight,PieceType.ROOK);
-                        ChessMove diagonalRightPromoBishop = new ChessMove(myPosition,pieceDiagonalRight,PieceType.BISHOP);
-                        ChessMove diagonalRightPromoKnight = new ChessMove(myPosition,pieceDiagonalRight,PieceType.KNIGHT);
+                            ChessMove diagonalRightPromoQueen = new ChessMove(myPosition, pieceDiagonalRight, PieceType.QUEEN);
+                            ChessMove diagonalRightPromoRook = new ChessMove(myPosition, pieceDiagonalRight, PieceType.ROOK);
+                            ChessMove diagonalRightPromoBishop = new ChessMove(myPosition, pieceDiagonalRight, PieceType.BISHOP);
+                            ChessMove diagonalRightPromoKnight = new ChessMove(myPosition, pieceDiagonalRight, PieceType.KNIGHT);
 
-                        possibleMoves.add(diagonalRightPromoQueen);
-                        possibleMoves.add(diagonalRightPromoRook);
-                        possibleMoves.add(diagonalRightPromoKnight);
-                        possibleMoves.add(diagonalRightPromoBishop);
+                            possibleMoves.add(diagonalRightPromoQueen);
+                            possibleMoves.add(diagonalRightPromoRook);
+                            possibleMoves.add(diagonalRightPromoKnight);
+                            possibleMoves.add(diagonalRightPromoBishop);
+                        }
                     }
                 }
             }
@@ -206,16 +211,20 @@ public class ChessPiece {
                 }
                 if (myPosition.getColumn() != 1){
                     ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.BLACK ) {
-                        ChessMove diagonalLeftCapture = new ChessMove(myPosition,pieceDiagonalLeft,null);
-                        possibleMoves.add(diagonalLeftCapture);
+                    if(board.getPiece(pieceDiagonalLeft) != null ) {
+                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.BLACK ) {
+                            ChessMove diagonalLeftCapture = new ChessMove(myPosition, pieceDiagonalLeft, null);
+                            possibleMoves.add(diagonalLeftCapture);
+                        }
                     }
                 }
                 if (myPosition.getColumn() != 8){
                     ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.BLACK ) {
-                        ChessMove diagonalRightCapture = new ChessMove(myPosition,pieceDiagonalRight,null);
-                        possibleMoves.add(diagonalRightCapture);
+                    if(board.getPiece(pieceDiagonalRight) != null) {
+                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.BLACK ) {
+                            ChessMove diagonalRightCapture = new ChessMove(myPosition, pieceDiagonalRight, null);
+                            possibleMoves.add(diagonalRightCapture);
+                        }
                     }
                 }
             }
@@ -229,16 +238,20 @@ public class ChessPiece {
                 }
                 if (myPosition.getColumn() != 1){
                     ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.WHITE ) {
-                        ChessMove diagonalLeftCapture = new ChessMove(myPosition,pieceDiagonalLeft,null);
-                        possibleMoves.add(diagonalLeftCapture);
+                    if(board.getPiece(pieceDiagonalLeft) != null ) {
+                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.WHITE ) {
+                            ChessMove diagonalLeftCapture = new ChessMove(myPosition, pieceDiagonalLeft, null);
+                            possibleMoves.add(diagonalLeftCapture);
+                        }
                     }
                 }
                 if (myPosition.getColumn() != 8){
                     ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.WHITE ) {
-                        ChessMove diagonalRightCapture = new ChessMove(myPosition,pieceDiagonalRight,null);
-                        possibleMoves.add(diagonalRightCapture);
+                    if(board.getPiece(pieceDiagonalRight) != null) {
+                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.WHITE ) {
+                            ChessMove diagonalRightCapture = new ChessMove(myPosition, pieceDiagonalRight, null);
+                            possibleMoves.add(diagonalRightCapture);
+                        }
                     }
                 }
             }
