@@ -88,7 +88,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Set<ChessMove> possibleMoves = new HashSet<>();
+        Collection<ChessMove> possibleMoves = new HashSet<>();
         if (pieceType == PieceType.PAWN) {
             /* Checks if White Pawns can move forward 1 and/or 2 spaces */
             if (myPosition.getRow() == 2 && pieceColor == ChessGame.TeamColor.WHITE) {
@@ -279,7 +279,22 @@ public class ChessPiece {
         }
         if (pieceType == PieceType.ROOK){
 
+            int limit = 8;
+            int rowUp = 1;
+            int rowDown = -1;
+            int rowSame = 0;
+            int colRight = 1;
+            int colLeft = -1;
+            int colSame = 0;
 
+            /// Rook Left Moves
+            moveAcrossBoard(myPosition,board,limit,rowSame,colLeft,possibleMoves);
+            /// Rook Right Moves
+            moveAcrossBoard(myPosition,board,limit,rowSame,colRight,possibleMoves);
+            /// Rook Up Moves
+            moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
+            /// Rook Down Moves
+            moveAcrossBoard(myPosition,board,limit,rowDown,colSame,possibleMoves);
         }
         if(pieceType == PieceType.KING){
             /// Corner White Kings
