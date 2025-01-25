@@ -367,6 +367,34 @@ public class ChessPiece {
             /// Queen Down Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
+        if(pieceType == PieceType.KNIGHT){
+            int limit = 1;
+            int rowUpOne = 1;
+            int rowUpTwo = 2;
+            int rowDownOne = -1;
+            int rowDownTwo = -2;
+            int colRightOne = 1;
+            int colRightTwo = 2;
+            int colLeftOne = -1;
+            int colLeftTwo = -2;
+
+            /// Knight 2 Up 1 Right
+            moveAcrossBoard(myPosition,board,limit,rowUpTwo,colRightOne,possibleMoves);
+            /// Knight 2 Up 1 Left
+            moveAcrossBoard(myPosition,board,limit,rowUpTwo,colLeftOne,possibleMoves);
+            /// Knight 1 Up 2 Right
+            moveAcrossBoard(myPosition,board,limit,rowUpOne,colRightTwo,possibleMoves);
+            /// Knight 1 Up 2 Left
+            moveAcrossBoard(myPosition,board,limit,rowUpOne,colLeftTwo,possibleMoves);
+            /// Knight 2 Down 1 Right
+            moveAcrossBoard(myPosition,board,limit,rowDownTwo,colRightOne,possibleMoves);
+            /// Knight 2 Down 1 Left
+            moveAcrossBoard(myPosition,board,limit,rowDownTwo,colLeftOne,possibleMoves);
+            /// Knight 1 Down 2 Right
+            moveAcrossBoard(myPosition,board,limit,rowDownOne,colRightTwo,possibleMoves);
+            /// Knight 1 Down 2 Left
+            moveAcrossBoard(myPosition,board,limit,rowDownOne,colLeftTwo,possibleMoves);
+        }
             return possibleMoves;
     }
 }
