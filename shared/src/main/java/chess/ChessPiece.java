@@ -341,6 +341,32 @@ public class ChessPiece {
             /// Bishop Diagonal Down Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
+        if(pieceType == PieceType.QUEEN){
+            int limit = 8;
+            int rowUp = 1;
+            int rowDown = -1;
+            int rowSame = 0;
+            int colRight = 1;
+            int colLeft = -1;
+            int colSame = 0;
+
+            /// Queen Up
+            moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
+            /// Queen Down
+            moveAcrossBoard(myPosition,board,limit,rowDown,colSame,possibleMoves);
+            /// Queen Right
+            moveAcrossBoard(myPosition,board,limit,rowSame,colRight,possibleMoves);
+            /// Queen Left
+            moveAcrossBoard(myPosition,board,limit,rowSame,colLeft,possibleMoves);
+            /// Queen Up Right
+            moveAcrossBoard(myPosition,board,limit,rowUp,colRight,possibleMoves);
+            /// Queen Up Left
+            moveAcrossBoard(myPosition,board,limit,rowUp,colLeft,possibleMoves);
+            /// Queen Down Right
+            moveAcrossBoard(myPosition,board,limit,rowDown,colRight,possibleMoves);
+            /// Queen Down Left
+            moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
+        }
             return possibleMoves;
     }
 }
