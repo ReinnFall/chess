@@ -322,6 +322,25 @@ public class ChessPiece {
             /// King Down Left Move
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
+        if(pieceType == PieceType.BISHOP){
+
+            int limit = 8;
+            int rowUp = 1;
+            int rowDown = -1;
+            int rowSame = 0;
+            int colRight = 1;
+            int colLeft = -1;
+            int colSame = 0;
+
+            /// Bishop Diagonal Up Right
+            moveAcrossBoard(myPosition,board,limit,rowUp,colRight,possibleMoves);
+            /// Bishop Diagonal Up Left
+            moveAcrossBoard(myPosition,board,limit,rowUp,colLeft,possibleMoves);
+            /// Bishop Diagonal Down Right
+            moveAcrossBoard(myPosition,board,limit,rowDown,colRight,possibleMoves);
+            /// Bishop Diagonal Down Left
+            moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
+        }
             return possibleMoves;
     }
 }
