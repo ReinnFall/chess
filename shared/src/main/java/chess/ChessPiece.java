@@ -60,6 +60,89 @@ public class ChessPiece {
         //throw new RuntimeException("Not implemented");
     }
 
+    public void blackPawnMoves(ChessBoard board, ChessPosition myPosition, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves, boolean isDiagonal){
+        for (int i = 1; i <= limit; i++) {
+            ChessPosition nextPiece = new ChessPosition((myPosition.getRow() + i * rowDir), (myPosition.getColumn() + i * colDir));
+            if (nextPiece.getRow() < 1 || nextPiece.getRow() > 8 || nextPiece.getColumn() < 1 || nextPiece.getColumn() > 8) {
+                break;
+            }
+            if(board.getPiece(nextPiece) == null && !isDiagonal) {
+                if (nextPiece.getRow() == 1) {
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                }
+                else{
+                    possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
+                    if(myPosition.getRow() == 7){
+                        ChessPosition nextPosition = new ChessPosition(myPosition.getRow() -2, myPosition.getColumn());
+                        if(board.getPiece(nextPosition) == null){
+                            possibleMoves.add(new ChessMove(myPosition,nextPosition,null));
+                        }
+                    }
+                }
+            }
+            if(board.getPiece(nextPiece) != null){
+                if(board.getPiece(nextPiece).getTeamColor() == ChessGame.TeamColor.WHITE){
+                    if (nextPiece.getRow() == 1) {
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                    }
+                    else{
+                        possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public void whitePawnMoves(ChessBoard board, ChessPosition myPosition, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves, boolean isDiagonal){
+        for (int i = 1; i <= limit; i++) {
+            ChessPosition nextPiece = new ChessPosition((myPosition.getRow() + i * rowDir), (myPosition.getColumn() + i * colDir));
+            if (nextPiece.getRow() < 1 || nextPiece.getRow() > 8 || nextPiece.getColumn() < 1 || nextPiece.getColumn() > 8) {
+                break;
+            }
+            if(board.getPiece(nextPiece) == null && isDiagonal == false) {
+                if (nextPiece.getRow() == 8) {
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
+                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                }
+                else{
+                    possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
+                    if(myPosition.getRow() == 2){
+                        ChessPosition nextPosition = new ChessPosition(myPosition.getRow() +2, myPosition.getColumn());
+                        if(board.getPiece(nextPosition) == null){
+                            possibleMoves.add(new ChessMove(myPosition,nextPosition,null));
+                        }
+                    }
+                }
+            }
+            if(board.getPiece(nextPiece) != null){
+                if(board.getPiece(nextPiece).getTeamColor() == ChessGame.TeamColor.BLACK ){
+                    if(!isDiagonal){
+                        break;
+                    }
+                    if (nextPiece.getRow() == 8) {
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
+                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                    }
+                    else{
+                        possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     public void moveAcrossBoard(ChessPosition myPosition,ChessBoard board, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves) {
 
         for (int i = 1; i <= limit; i++) {
@@ -90,192 +173,43 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves = new HashSet<>();
         if (pieceType == PieceType.PAWN) {
-            /* Checks if White Pawns can move forward 1 and/or 2 spaces */
-            if (myPosition.getRow() == 2 && pieceColor == ChessGame.TeamColor.WHITE) {
+            if(pieceColor == ChessGame.TeamColor.WHITE){
+                int limit = 1;
+                int rowUp = 1;
+                int colSame = 0;
+                int colRight = 1;
+                int colLeft = -1;
+                boolean diagonal = true;
+                boolean notDiagonal = false;
 
-                ChessPosition pieceAbove = new ChessPosition(3, myPosition.getColumn());
-                ChessPosition twoPiecesAbove = new ChessPosition(4, myPosition.getColumn());
+                /// Up One
+                whitePawnMoves(board,myPosition,limit,rowUp,colSame,possibleMoves,notDiagonal);
 
-                if (board.getPiece(pieceAbove) == null) {
-                    ChessMove forwardOne = new ChessMove(myPosition, pieceAbove, null);
-                    possibleMoves.add(forwardOne);
+                /// Check Up 1 Right 1
+                whitePawnMoves(board,myPosition,limit,rowUp,colRight,possibleMoves,diagonal);
 
-                    if (board.getPiece(twoPiecesAbove) == null) {
-                        ChessMove forwardTwo = new ChessMove(myPosition, twoPiecesAbove, null);
-                        possibleMoves.add(forwardTwo);
-                    }
-                }
+                /// Check Up 1 Left 1
+                whitePawnMoves(board,myPosition,limit,rowUp,colLeft,possibleMoves,diagonal);
             }
-            /* Checks if Black Pawns can move forward 1 and/or 2 spaces */
-            if (myPosition.getRow() == 7 && pieceColor == ChessGame.TeamColor.BLACK) {
+            if(pieceColor == ChessGame.TeamColor.BLACK){
+                int limit = 1;
+                int rowDown = -1;
+                int colSame = 0;
+                int colRight = 1;
+                int colLeft = -1;
+                boolean diagonal = true;
+                boolean notDiagonal = false;
 
-                ChessPosition pieceBelow = new ChessPosition(6, myPosition.getColumn());
-                ChessPosition twoPiecesBelow = new ChessPosition(5, myPosition.getColumn());
+                /// Down One
+                blackPawnMoves(board,myPosition,limit,rowDown,colSame,possibleMoves,notDiagonal);
 
-                if (board.getPiece(pieceBelow) == null) {
-                    ChessMove forwardOne = new ChessMove(myPosition, pieceBelow, null);
-                    possibleMoves.add(forwardOne);
+                /// Check Down 1 Right 1
+                blackPawnMoves(board,myPosition,limit,rowDown,colRight,possibleMoves,diagonal);
 
-                    if (board.getPiece(twoPiecesBelow) == null) {
-                        ChessMove forwardTwo = new ChessMove(myPosition, twoPiecesBelow, null);
-                        possibleMoves.add(forwardTwo);
-                    }
-                }
+                /// Check Down 1 Left 1
+                blackPawnMoves(board,myPosition,limit,rowDown,colLeft,possibleMoves,diagonal);
             }
-            /* Black Pawn Promotion Moves */
-            if (myPosition.getRow() == 2 && pieceColor == ChessGame.TeamColor.BLACK) {
 
-                ChessPosition pieceBelow = new ChessPosition(1, myPosition.getColumn());
-
-                if (board.getPiece(pieceBelow) == null) {
-                    ChessMove promoQueen = new ChessMove(myPosition, pieceBelow, PieceType.QUEEN);
-                    ChessMove promoRook = new ChessMove(myPosition, pieceBelow, PieceType.ROOK);
-                    ChessMove promoKnight = new ChessMove(myPosition, pieceBelow, PieceType.KNIGHT);
-                    ChessMove promoBishop = new ChessMove(myPosition, pieceBelow, PieceType.BISHOP);
-
-                    possibleMoves.add(promoQueen);
-                    possibleMoves.add(promoRook);
-                    possibleMoves.add(promoKnight);
-                    possibleMoves.add(promoBishop);
-                }
-                if (myPosition.getColumn() != 1){
-                    ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft) != null ) {
-                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.WHITE){
-                            ChessMove diagonalLeftPromoQueen = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.QUEEN);
-                            ChessMove diagonalLeftPromoRook = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.ROOK);
-                            ChessMove diagonalLeftPromoBishop = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.BISHOP);
-                            ChessMove diagonalLeftPromoKnight = new ChessMove(myPosition,pieceDiagonalLeft,PieceType.KNIGHT);
-
-                            possibleMoves.add(diagonalLeftPromoQueen);
-                            possibleMoves.add(diagonalLeftPromoRook);
-                            possibleMoves.add(diagonalLeftPromoKnight);
-                            possibleMoves.add(diagonalLeftPromoBishop);
-                        }
-                    }
-                }
-                if (myPosition.getColumn() != 8){
-                    ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight) != null) {
-                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.WHITE ) {
-                            ChessMove diagonalRightPromoQueen = new ChessMove(myPosition, pieceDiagonalRight, PieceType.QUEEN);
-                            ChessMove diagonalRightPromoRook = new ChessMove(myPosition, pieceDiagonalRight, PieceType.ROOK);
-                            ChessMove diagonalRightPromoBishop = new ChessMove(myPosition, pieceDiagonalRight, PieceType.BISHOP);
-                            ChessMove diagonalRightPromoKnight = new ChessMove(myPosition, pieceDiagonalRight, PieceType.KNIGHT);
-
-                            possibleMoves.add(diagonalRightPromoQueen);
-                            possibleMoves.add(diagonalRightPromoRook);
-                            possibleMoves.add(diagonalRightPromoKnight);
-                            possibleMoves.add(diagonalRightPromoBishop);
-                        }
-                    }
-                }
-            }
-            /* White Pawn Promotion Moves */
-            if (myPosition.getRow() == 7 && pieceColor == ChessGame.TeamColor.WHITE) {
-
-                ChessPosition pieceAbove = new ChessPosition(8, myPosition.getColumn());
-
-                if (board.getPiece(pieceAbove) == null) {
-                    ChessMove promoQueen = new ChessMove(myPosition, pieceAbove, PieceType.QUEEN);
-                    ChessMove promoRook = new ChessMove(myPosition, pieceAbove, PieceType.ROOK);
-                    ChessMove promoKnight = new ChessMove(myPosition, pieceAbove, PieceType.KNIGHT);
-                    ChessMove promoBishop = new ChessMove(myPosition, pieceAbove, PieceType.BISHOP);
-
-                    possibleMoves.add(promoQueen);
-                    possibleMoves.add(promoRook);
-                    possibleMoves.add(promoKnight);
-                    possibleMoves.add(promoBishop);
-                }
-                if (myPosition.getColumn() != 1){
-                    ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft) != null ) {
-                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.BLACK ) {
-                            ChessMove diagonalLeftPromoQueen = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.QUEEN);
-                            ChessMove diagonalLeftPromoRook = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.ROOK);
-                            ChessMove diagonalLeftPromoBishop = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.BISHOP);
-                            ChessMove diagonalLeftPromoKnight = new ChessMove(myPosition, pieceDiagonalLeft, PieceType.KNIGHT);
-
-                            possibleMoves.add(diagonalLeftPromoQueen);
-                            possibleMoves.add(diagonalLeftPromoRook);
-                            possibleMoves.add(diagonalLeftPromoKnight);
-                            possibleMoves.add(diagonalLeftPromoBishop);
-                        }
-                    }
-                }
-                if (myPosition.getColumn() != 8){
-                    ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight) != null) {
-                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.BLACK ) {
-
-                            ChessMove diagonalRightPromoQueen = new ChessMove(myPosition, pieceDiagonalRight, PieceType.QUEEN);
-                            ChessMove diagonalRightPromoRook = new ChessMove(myPosition, pieceDiagonalRight, PieceType.ROOK);
-                            ChessMove diagonalRightPromoBishop = new ChessMove(myPosition, pieceDiagonalRight, PieceType.BISHOP);
-                            ChessMove diagonalRightPromoKnight = new ChessMove(myPosition, pieceDiagonalRight, PieceType.KNIGHT);
-
-                            possibleMoves.add(diagonalRightPromoQueen);
-                            possibleMoves.add(diagonalRightPromoRook);
-                            possibleMoves.add(diagonalRightPromoKnight);
-                            possibleMoves.add(diagonalRightPromoBishop);
-                        }
-                    }
-                }
-            }
-            /* White Pawn Normal Moving and Capture Logic */
-            if ((myPosition.getRow() == 2 || myPosition.getRow() == 3 || myPosition.getRow() == 4 || myPosition.getRow() == 5 || myPosition.getRow() == 6) && pieceColor == ChessGame.TeamColor.WHITE){
-
-                ChessPosition pieceAbove = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
-                if (board.getPiece(pieceAbove) == null) {
-                    ChessMove forwardOne = new ChessMove(myPosition, pieceAbove, null);
-                    possibleMoves.add(forwardOne);
-                }
-                if (myPosition.getColumn() != 1){
-                    ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft) != null ) {
-                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.BLACK ) {
-                            ChessMove diagonalLeftCapture = new ChessMove(myPosition, pieceDiagonalLeft, null);
-                            possibleMoves.add(diagonalLeftCapture);
-                        }
-                    }
-                }
-                if (myPosition.getColumn() != 8){
-                    ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight) != null) {
-                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.BLACK ) {
-                            ChessMove diagonalRightCapture = new ChessMove(myPosition, pieceDiagonalRight, null);
-                            possibleMoves.add(diagonalRightCapture);
-                        }
-                    }
-                }
-            }
-            /* Black Pawn
-             Normal Moving and Capture Logic */
-            if ((myPosition.getRow() == 7 || myPosition.getRow() == 6 || myPosition.getRow() == 5 || myPosition.getRow() == 4 || myPosition.getRow() == 3) && pieceColor == ChessGame.TeamColor.BLACK){
-
-                ChessPosition pieceBelow = new ChessPosition(myPosition.getRow() -1, myPosition.getColumn());
-                if (board.getPiece(pieceBelow) == null) {
-                    ChessMove forwardOne = new ChessMove(myPosition, pieceBelow, null);
-                    possibleMoves.add(forwardOne);
-                }
-                if (myPosition.getColumn() != 1){
-                    ChessPosition pieceDiagonalLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() - 1);
-                    if(board.getPiece(pieceDiagonalLeft) != null ) {
-                        if(board.getPiece(pieceDiagonalLeft).getTeamColor() == ChessGame.TeamColor.WHITE ) {
-                            ChessMove diagonalLeftCapture = new ChessMove(myPosition, pieceDiagonalLeft, null);
-                            possibleMoves.add(diagonalLeftCapture);
-                        }
-                    }
-                }
-                if (myPosition.getColumn() != 8){
-                    ChessPosition pieceDiagonalRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn() + 1);
-                    if(board.getPiece(pieceDiagonalRight) != null) {
-                        if(board.getPiece(pieceDiagonalRight).getTeamColor() == ChessGame.TeamColor.WHITE ) {
-                            ChessMove diagonalRightCapture = new ChessMove(myPosition, pieceDiagonalRight, null);
-                            possibleMoves.add(diagonalRightCapture);
-                        }
-                    }
-                }
-            }
         }
         if (pieceType == PieceType.ROOK){
 
@@ -287,6 +221,7 @@ public class ChessPiece {
             int colLeft = -1;
             int colSame = 0;
 
+
             /// Rook Left Moves
             moveAcrossBoard(myPosition,board,limit,rowSame,colLeft,possibleMoves);
             /// Rook Right Moves
@@ -296,7 +231,7 @@ public class ChessPiece {
             /// Rook Down Moves
             moveAcrossBoard(myPosition,board,limit,rowDown,colSame,possibleMoves);
         }
-        if(pieceType == PieceType.KING){
+        if (pieceType == PieceType.KING){
             int limit = 1;
             int rowUp = 1;
             int rowDown = -1;
@@ -304,6 +239,7 @@ public class ChessPiece {
             int colRight = 1;
             int colLeft = -1;
             int colSame = 0;
+
 
             /// King Up Move
             moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
@@ -322,7 +258,7 @@ public class ChessPiece {
             /// King Down Left Move
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
-        if(pieceType == PieceType.BISHOP){
+        if (pieceType == PieceType.BISHOP){
 
             int limit = 8;
             int rowUp = 1;
@@ -331,6 +267,7 @@ public class ChessPiece {
             int colRight = 1;
             int colLeft = -1;
             int colSame = 0;
+
 
             /// Bishop Diagonal Up Right
             moveAcrossBoard(myPosition,board,limit,rowUp,colRight,possibleMoves);
@@ -341,7 +278,7 @@ public class ChessPiece {
             /// Bishop Diagonal Down Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
-        if(pieceType == PieceType.QUEEN){
+        if (pieceType == PieceType.QUEEN){
             int limit = 8;
             int rowUp = 1;
             int rowDown = -1;
@@ -349,6 +286,7 @@ public class ChessPiece {
             int colRight = 1;
             int colLeft = -1;
             int colSame = 0;
+
 
             /// Queen Up
             moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
@@ -367,7 +305,7 @@ public class ChessPiece {
             /// Queen Down Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
-        if(pieceType == PieceType.KNIGHT){
+        if (pieceType == PieceType.KNIGHT){
             int limit = 1;
             int rowUpOne = 1;
             int rowUpTwo = 2;
@@ -377,6 +315,7 @@ public class ChessPiece {
             int colRightTwo = 2;
             int colLeftOne = -1;
             int colLeftTwo = -2;
+
 
             /// Knight 2 Up 1 Right
             moveAcrossBoard(myPosition,board,limit,rowUpTwo,colRightOne,possibleMoves);
@@ -398,15 +337,3 @@ public class ChessPiece {
             return possibleMoves;
     }
 }
-
-////int colPosition = myPosition.getColumn();
-////                ChessPosition pieceToTheLeft = new ChessPosition(myPosition.getRow(),myPosition.getColumn() -1);
-////                do {
-////                    if(board.getPiece(pieceToTheLeft) == null){
-////                        ChessMove emptyLeft = new ChessMove(myPosition,pieceToTheLeft,null);
-////                        possibleMoves.add(emptyLeft);
-////                    }
-////
-////                    colPosition--;
-////                    ChessPosition pieceToTheLeft = new ChessPosition(myPosition.getRow(),myPosition.getColumn() -1);
-////                } while (board.getPiece(pieceToTheLeft) == null && colPosition > 1)
