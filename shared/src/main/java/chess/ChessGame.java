@@ -109,9 +109,6 @@ public class ChessGame {
                 updatedValidMoves.add(move);
             }
         }
-        ///  Need to iterate through each of the piece moves and check if moving that to that position leaves the king open
-        ///  Could make a copy of the board and move the piece to the potential spot then check if King is in check/
-        /// I would need to check if the king was in check beforehand
         return updatedValidMoves;
     }
 
@@ -180,15 +177,29 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        Collection<ChessMove> enemyMoves = new HashSet<>();
-        if (isInCheck(teamColor) == true){
-            /// Find King
-            ChessPosition kingPosition = findKing(teamColor);
-            /// Add all enemy moves to our collection
-            enemyMoves = addEnemyMoves(teamColor, enemyMoves);
-            /// Find valid moves of King and if it has none return true
+        Collection<ChessMove> possibleMoves = new HashSet<>();
+        /// If no there are no valid moves left for the team color, then its checkmate
+        /// Iterate through each piece and call validMoves
+        ///  If that list is empty, then checkmate
+
+        /// Iterate through whole board and try to add valid moves for each piece of the team
+        for (int i = 1; i <= 8; i++){
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition currentPosition = new ChessPosition(i,j);
+                if(gameBoard.getPiece(currentPosition) != null){
+                    ChessPiece currentPiece = gameBoard.getPiece(currentPosition);
+                    if (currentPiece.getTeamColor() == teamColor) {
+                        possibleMoves = validMoves(currentPosition);
+                    }
+                }
+            }
         }
-        throw new RuntimeException("Not implemented");
+        if (possibleMoves.isEmpty()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
