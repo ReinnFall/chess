@@ -85,11 +85,13 @@ public class ChessGame {
     }
     public ChessPosition findKing(TeamColor teamColor){
         for (int i = 1; i <= 8; i++){
-            for (int j = 0; j <= 8; j++){
+            for (int j = 1; j <= 8; j++){
                 ChessPosition currentPosition = new ChessPosition(i,j);
-                ChessPiece currentPiece = gameBoard.getPiece(currentPosition);
-                if (currentPiece.getPieceType() == ChessPiece.PieceType.KING && currentPiece.getTeamColor() == teamColor){
-                    return currentPosition;
+                if(gameBoard.getPiece(currentPosition) != null) {
+                    ChessPiece currentPiece = gameBoard.getPiece(currentPosition);
+                    if (currentPiece.getPieceType() == ChessPiece.PieceType.KING && currentPiece.getTeamColor() == teamColor) {
+                        return currentPosition;
+                    }
                 }
             }
         }
@@ -97,7 +99,7 @@ public class ChessGame {
     }
     public Collection<ChessMove> addEnemyMoves (TeamColor teamColor, Collection<ChessMove> enemyMoves){
         for (int i = 1; i <= 8; i++){
-            for (int j = 0; j <= 8; j++){
+            for (int j = 1; j <= 8; j++){
                 ChessPosition currentPosition = new ChessPosition(i,j);
                 if(gameBoard.getPiece(currentPosition) != null) {
                     ChessPiece currentPiece = gameBoard.getPiece(currentPosition);
