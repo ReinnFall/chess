@@ -64,8 +64,13 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
         ChessPiece currentPiece = gameBoard.getPiece(startPosition);
+        if (currentPiece == null){
+            return null;
+        }
+        ///  Need to iterate through each of the piece moves and check if moving that to that position leaves the king open
+        ///  Could make a copy of the board and move the piece to the potential spot then check if King is in check/
+        /// I would need to check if the king was in check beforehand
         return currentPiece.pieceMoves(gameBoard,startPosition);
     }
 
@@ -90,17 +95,7 @@ public class ChessGame {
         }
         throw new RuntimeException("King not found");
     }
-    /**
-     * Determines if the given team is in check
-     *
-     * @param teamColor which team to check for check
-     * @return True if the specified team is in check
-     */
-    public boolean isInCheck(TeamColor teamColor) {
-        Collection<ChessMove> enemyMoves = new HashSet<>();
-        /// Find King
-        ChessPosition kingPosition = findKing(teamColor);
-
+    public Collection<ChessMove> addEnemyMoves (TeamColor teamColor, Collection<ChessMove> enemyMoves){
         for (int i = 1; i <= 8; i++){
             for (int j = 0; j <= 8; j++){
                 ChessPosition currentPosition = new ChessPosition(i,j);
@@ -112,8 +107,24 @@ public class ChessGame {
                 }
             }
         }
+        return enemyMoves;
+    }
+    /**
+     * Determines if the given team is in check
+     *
+     * @param teamColor which team to check for check
+     * @return True if the specified team is in check
+     */
+    public boolean isInCheck(TeamColor teamColor) {
+        Collection<ChessMove> enemyMoves = new HashSet<>();
+
+        /// Find King
+        ChessPosition kingPosition = findKing(teamColor);
+        /// Add all enemy moves to our collection
+        enemyMoves = addEnemyMoves(teamColor, enemyMoves);
+        /// Iterate through all enemy moves and check if their end position matches the Kings current position
         for(ChessMove move : enemyMoves){
-            if(move.getEndPosition() == kingPosition){
+            if(move.getEndPosition() == kingPosition){ /// check if this works
                 return true;
             }
         }
@@ -126,6 +137,14 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+        Collection<ChessMove> enemyMoves = new HashSet<>();
+        if (isInCheck(teamColor) == true){
+            /// Find King
+            ChessPosition kingPosition = findKing(teamColor);
+            /// Add all enemy moves to our collection
+            enemyMoves = addEnemyMoves(teamColor, enemyMoves);
+            /// Find valid moves of King and if it has none return true
+        }
         throw new RuntimeException("Not implemented");
     }
 
