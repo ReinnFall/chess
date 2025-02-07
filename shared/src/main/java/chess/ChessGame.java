@@ -2,7 +2,6 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,6 +19,10 @@ public class ChessGame {
 
         gameBoard = new ChessBoard();
         gameBoard.resetBoard();
+    }
+    public ChessGame(TeamColor turn,ChessBoard board){
+        teamTurn = turn;
+        gameBoard = board;
     }
 
     @Override
@@ -55,6 +58,21 @@ public class ChessGame {
         WHITE,
         BLACK
     }
+    public ChessBoard createSimBoard(){
+        ChessBoard simBoard = new ChessBoard();
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition tempPosition = new ChessPosition(i,j);
+                if(gameBoard.getPiece(tempPosition) == null){
+                    simBoard.addPiece(tempPosition,null);
+                }
+                else{
+                    simBoard.addPiece(tempPosition,gameBoard.getPiece(tempPosition));
+                }
+            }
+        }
+        return simBoard;
+    }
 
     /**
      * Gets a valid moves for a piece at the given location
@@ -64,14 +82,34 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        Collection<ChessMove> pieceMoves;
+        Collection<ChessMove> updatedValidMoves = new HashSet<>();
+
         ChessPiece currentPiece = gameBoard.getPiece(startPosition);
         if (currentPiece == null){
             return null;
         }
+        pieceMoves = currentPiece.pieceMoves(gameBoard,startPosition);
+        for (ChessMove move : pieceMoves){
+            /// Create a new board that I can simulate each piece move
+            ChessBoard simBoard = createSimBoard();
+            ChessPosition newPosition =  move.getEndPosition();
+
+            /// Move the piece to the piece move
+            simBoard.addPiece(newPosition,currentPiece);
+            /// Make the space it moved from null
+            simBoard.addPiece(startPosition,null);
+
+            ChessGame gameSim = new ChessGame(teamTurn,simBoard);
+
+            if(gameSim.isInCheck(teamTurn) == false){
+                updatedValidMoves.add(move);
+            }
+        }
         ///  Need to iterate through each of the piece moves and check if moving that to that position leaves the king open
         ///  Could make a copy of the board and move the piece to the potential spot then check if King is in check/
         /// I would need to check if the king was in check beforehand
-        return currentPiece.pieceMoves(gameBoard,startPosition);
+        return updatedValidMoves;
     }
 
     /**
@@ -126,7 +164,7 @@ public class ChessGame {
         enemyMoves = addEnemyMoves(teamColor, enemyMoves);
         /// Iterate through all enemy moves and check if their end position matches the Kings current position
         for(ChessMove move : enemyMoves){
-            if(move.getEndPosition() == kingPosition){ /// check if this works
+            if(move.getEndPosition().equals(kingPosition) ){ /// check if this works
                 return true;
             }
         }
