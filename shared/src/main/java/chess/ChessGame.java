@@ -119,7 +119,26 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece currentPiece = gameBoard.getPiece(startPosition);
+
+        /// Find all the valid moves for the piece in the current starting position
+        Collection<ChessMove> possibleMoves = validMoves(startPosition);
+
+
+        for(ChessMove eachPossibleMove : possibleMoves){
+            if(eachPossibleMove.getEndPosition().equals(endPosition)){
+                /// Move the piece to the piece move
+                gameBoard.addPiece(endPosition,currentPiece);
+                /// Make the space it moved from null
+                gameBoard.addPiece(startPosition,null);
+                return; /// Exit function
+            }
+        }
+
+        throw new InvalidMoveException ("Move not accepted");
     }
     public ChessPosition findKing(TeamColor teamColor){
         for (int i = 1; i <= 8; i++){
