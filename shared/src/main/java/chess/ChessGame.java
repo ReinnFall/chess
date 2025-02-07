@@ -123,6 +123,13 @@ public class ChessGame {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece currentPiece = gameBoard.getPiece(startPosition);
+        if(currentPiece == null){
+            throw new InvalidMoveException ("Move not accepted");
+        }
+        if (currentPiece.getTeamColor() != teamTurn){
+            throw new InvalidMoveException ("Move not accepted");
+        }
+
 
         /// Find all the valid moves for the piece in the current starting position
         Collection<ChessMove> possibleMoves = validMoves(startPosition);
@@ -130,11 +137,34 @@ public class ChessGame {
 
         for(ChessMove eachPossibleMove : possibleMoves){
             if(eachPossibleMove.getEndPosition().equals(endPosition)){
-                /// Move the piece to the piece move
-                gameBoard.addPiece(endPosition,currentPiece);
-                /// Make the space it moved from null
-                gameBoard.addPiece(startPosition,null);
-                return; /// Exit function
+                if(move.getPromotionPiece() == null) {
+                    /// Move the piece
+                    gameBoard.addPiece(endPosition, currentPiece);
+                    /// Make the space it moved from null
+                    gameBoard.addPiece(startPosition, null);
+
+                    if (teamTurn == TeamColor.WHITE) {
+                        teamTurn = TeamColor.BLACK;
+                    } else {
+                        teamTurn = TeamColor.WHITE;
+                    }
+                    return; /// Exit function
+                }
+                else{
+                    /// Make new Chess Piece
+                    ChessPiece promotionPiece = new ChessPiece(teamTurn,move.getPromotionPiece());
+                    /// Move the piece
+                    gameBoard.addPiece(endPosition, promotionPiece);
+                    /// Make the space it moved from null
+                    gameBoard.addPiece(startPosition, null);
+
+                    if (teamTurn == TeamColor.WHITE) {
+                        teamTurn = TeamColor.BLACK;
+                    } else {
+                        teamTurn = TeamColor.WHITE;
+                    }
+                    return; /// Exit function
+                }
             }
         }
 
