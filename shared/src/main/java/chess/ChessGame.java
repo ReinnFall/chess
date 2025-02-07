@@ -39,6 +39,7 @@ public class ChessGame {
         return Objects.hash(teamTurn, gameBoard);
     }
 
+
     /// @return Which team's turn it is
     public TeamColor getTeamTurn() {
         return teamTurn;
@@ -100,9 +101,11 @@ public class ChessGame {
             /// Make the space it moved from null
             simBoard.addPiece(startPosition,null);
 
-            ChessGame gameSim = new ChessGame(teamTurn,simBoard);
+            TeamColor turn = currentPiece.getTeamColor();
 
-            if(gameSim.isInCheck(teamTurn) == false){
+            ChessGame gameSim = new ChessGame(turn,simBoard);
+
+            if(gameSim.isInCheck(turn) == false){
                 updatedValidMoves.add(move);
             }
         }
