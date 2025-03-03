@@ -1,12 +1,20 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.MemoryUserDAO;
+import dataaccess.UserDAO;
 import spark.*;
 import service.LoginService;
 import model.UserData;
 
 public class Server {
     private final LoginService service;
+    private final UserDAO userDAO;
+
+    public Server(){
+        userDAO = new MemoryUserDAO();
+        service = new LoginService(userDAO);
+    }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -24,6 +32,8 @@ public class Server {
     }
     private Object LoginHandler(Request req, Response res){
         var userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
+
+
         userLoginInfo = service.LoginRequest(userLoginInfo);
 
         return new Gson().toJson(userLoginInfo);
