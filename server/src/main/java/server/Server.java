@@ -3,19 +3,22 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
+import service.RegisterService;
 import spark.*;
 import service.LoginService;
 import model.UserData;
 
 public class Server {
-    private final LoginService service;
+    private final LoginService loginService;
+    private final RegisterService registerService;
     private final UserDAO userDAO; // Potential optimization
     private final AuthDAO authDAO;
 
     public Server(){
         userDAO = new MemoryUserDAO();
         authDAO = new MemoryAuthDAO();
-        service = new LoginService(userDAO,authDAO);
+        loginService = new LoginService(userDAO,authDAO);
+        registerService = new RegisterService(userDAO,authDAO);
     }
 
     public int run(int desiredPort) {
@@ -24,7 +27,8 @@ public class Server {
         Spark.staticFiles.location("web");
 
         // Register your endpoints and handle exceptions here.
-        Spark.post("/session", this::LoginHandler);
+        Spark.post("/session", this::loginHandler);
+        Spark.post("/user",this::registerHandler);
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
@@ -36,15 +40,25 @@ public class Server {
     }
     private void exceptionHandler(DataAccessException ex, Request req, Response res) {
         res.status(ex.StatusCode());
-        res.body(ex.toJson());
+        res.body(ex.toJsonCustom());
     }
-    private Object LoginHandler(Request req, Response res) throws DataAccessException {
+    private Object loginHandler(Request req, Response res) throws DataAccessException {
         var userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
+        AuthData loginResult = loginService.loginRequest(userLoginInfo);
 
+        res.status(200);
+        res.body(new Gson().toJson(loginResult));
 
-        AuthData LoginResult = service.loginRequest(userLoginInfo);
+        return res.body();
+    }
+    private Object registerHandler(Request req, Response res) throws DataAccessException {
+        var userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
+        AuthData registerResult = registerService.registerRequest(userLoginInfo);
 
-        return new Gson().toJson(LoginResult);
+        res.status(200);
+        res.body(new Gson().toJson(registerResult));
+
+        return res.body();
     }
 
     public void stop() {
