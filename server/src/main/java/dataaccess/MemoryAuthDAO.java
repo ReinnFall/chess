@@ -9,6 +9,6 @@ public class MemoryAuthDAO implements AuthDAO{
     final private Collection<AuthData> authData = new HashSet<>();
 
     public void createAuth(AuthData data){
-
+        authData.add(data);
     }
 }

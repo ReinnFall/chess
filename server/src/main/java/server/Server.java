@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.*;
+import model.AuthData;
 import spark.*;
 import service.LoginService;
 import model.UserData;
@@ -35,9 +36,9 @@ public class Server {
         var userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
 
 
-        userLoginInfo = service.LoginRequest(userLoginInfo);
+        AuthData LoginResult = service.LoginRequest(userLoginInfo);
 
-        return new Gson().toJson(userLoginInfo);
+        return new Gson().toJson(LoginResult);
     }
 
     public void stop() {
