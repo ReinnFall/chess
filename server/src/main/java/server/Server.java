@@ -26,11 +26,17 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.post("/session", this::LoginHandler);
 
+        Spark.exception(DataAccessException.class, this::exceptionHandler);
+
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
 
         Spark.awaitInitialization();
         return Spark.port();
+    }
+    private void exceptionHandler(DataAccessException ex, Request req, Response res) {
+        res.status(ex.StatusCode());
+        res.body(ex.toJson());
     }
     private Object LoginHandler(Request req, Response res) throws DataAccessException {
         var userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
