@@ -22,7 +22,7 @@ public class LoginService{
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }
-    public AuthData LoginRequest(UserData data) throws DataAccessException {
+    public AuthData loginRequest(UserData data) throws DataAccessException {
 
         UserData dataFromMemory = userDAO.getUser(data.username());
         if (dataFromMemory == null){

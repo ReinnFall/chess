@@ -36,7 +36,7 @@ public class Server {
         var userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
 
 
-        AuthData LoginResult = service.LoginRequest(userLoginInfo);
+        AuthData LoginResult = service.loginRequest(userLoginInfo);
 
         return new Gson().toJson(LoginResult);
     }
