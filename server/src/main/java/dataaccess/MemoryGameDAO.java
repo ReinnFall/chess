@@ -29,7 +29,7 @@ public class MemoryGameDAO implements GameDAO{
         return nextID - 1;
     }
     public Collection<GameData> listGames(){
-
+        return gameDataCollection;
     }
 
 }

@@ -12,7 +12,7 @@ public class ListGameService{
     private AuthDAO authDAO;
     private GameDAO gameDAO;
 
-    public ListGameService(AuthDAO authDAO){
+    public ListGameService(AuthDAO authDAO,GameDAO gameDAO){
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
     }
@@ -22,8 +22,8 @@ public class ListGameService{
             throw new DataAccessException(401,"Error: unauthorized");
         }
         else{
-            Collection<GameData> games = gameDAO.listGames();
+            return gameDAO.listGames();
         }
-        return null;
+
     }
 }

@@ -18,6 +18,7 @@ public class Server {
     private final ClearService clearService;
     private final CreateGameService createGameService;
     private final ListGameService listGameService;
+    private final JoinGameService joinGameService;
     private final UserDAO userDAO; // Potential optimization
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
@@ -32,6 +33,7 @@ public class Server {
         clearService = new ClearService(userDAO,authDAO,gameDAO);
         createGameService = new CreateGameService(authDAO,gameDAO);
         listGameService = new ListGameService(authDAO,gameDAO);
+        joinGameService = new JoinGameService(authDAO,gameDAO);
     }
 
     public int run(int desiredPort) {
@@ -46,6 +48,7 @@ public class Server {
         Spark.delete("/db", this::clearHandler);
         Spark.post("game",this::createGameHandler);
         Spark.get("/game",this::listGameHandler);
+        Spark.put("/game", this::joinGameHandler);
 
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
@@ -108,6 +111,13 @@ public class Server {
         res.body(new Gson().toJson(games));
 
         return res.body();
+    }
+    private Object joinGameHandler(Request req, Response res) throws DataAccessException{
+        String authToken = req.headers("authorization");
+        GameData playerColorandID = new Gson().fromJson(req.body(), GameData.class);
+
+        joinGameService.joinGameRequest(playerColorandID,authToken);
+
     }
 
     public void stop() {
