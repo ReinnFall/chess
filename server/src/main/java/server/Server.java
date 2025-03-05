@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
+import service.ClearService;
 import service.LogoutService;
 import service.RegisterService;
 import spark.*;
@@ -13,15 +14,19 @@ public class Server {
     private final LoginService loginService;
     private final RegisterService registerService;
     private final LogoutService logoutService;
+    private final ClearService clearService;
     private final UserDAO userDAO; // Potential optimization
     private final AuthDAO authDAO;
+    private final GameDAO gameDAO;
 
     public Server(){
         userDAO = new MemoryUserDAO();
         authDAO = new MemoryAuthDAO();
+        gameDAO = new MemoryGameDAO();
         loginService = new LoginService(userDAO,authDAO);
         registerService = new RegisterService(userDAO,authDAO);
         logoutService = new LogoutService(authDAO);
+        clearService = new ClearService(userDAO,authDAO,gameDAO);
     }
 
     public int run(int desiredPort) {
@@ -32,7 +37,9 @@ public class Server {
         // Register your endpoints and handle exceptions here.
         Spark.post("/session", this::loginHandler);
         Spark.post("/user",this::registerHandler);
-        Spark.delete("session", this::logoutHandler);
+        Spark.delete("/session", this::logoutHandler);
+        Spark.delete("/db", this::clearHandler);
+
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
 
@@ -68,6 +75,11 @@ public class Server {
         String authToken = req.headers("authorization");
         logoutService.logoutRequest(authToken);
         //res.status(200);
+
+        return "";
+    }
+    private Object clearHandler(Request req, Response res) throws DataAccessException{
+        clearService.clearAllData();
 
         return "";
     }

@@ -18,6 +18,5 @@ public class LogoutService {
         else{
             authDAO.deleteAuth(authFromMemory);
         }
-
     }
 }

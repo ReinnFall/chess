@@ -21,4 +21,7 @@ public class MemoryUserDAO implements UserDAO{
         UserData newUserData = new UserData(data.username(), data.password(), data.email());
         userDataCollection.add(newUserData);
     }
+    public void clearUserData(){
+        userDataCollection.clear();
+    }
 }

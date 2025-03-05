@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.AuthData;
-import model.UserData;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,5 +22,8 @@ public class MemoryAuthDAO implements AuthDAO{
     }
     public void deleteAuth(AuthData data){
         authDataCollection.remove(data);
+    }
+    public void clearAuthData(){
+        authDataCollection.clear();
     }
 }
