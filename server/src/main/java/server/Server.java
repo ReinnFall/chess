@@ -3,18 +3,19 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
-import service.ClearService;
-import service.LogoutService;
-import service.RegisterService;
+import model.GameData;
+import service.*;
 import spark.*;
-import service.LoginService;
 import model.UserData;
+
+import java.util.Map;
 
 public class Server {
     private final LoginService loginService;
     private final RegisterService registerService;
     private final LogoutService logoutService;
     private final ClearService clearService;
+    private final CreateGameService createGameService;
     private final UserDAO userDAO; // Potential optimization
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
@@ -27,6 +28,7 @@ public class Server {
         registerService = new RegisterService(userDAO,authDAO);
         logoutService = new LogoutService(authDAO);
         clearService = new ClearService(userDAO,authDAO,gameDAO);
+        createGameService = new CreateGameService(authDAO,gameDAO);
     }
 
     public int run(int desiredPort) {
@@ -39,6 +41,7 @@ public class Server {
         Spark.post("/user",this::registerHandler);
         Spark.delete("/session", this::logoutHandler);
         Spark.delete("/db", this::clearHandler);
+        Spark.post("game",this::createGameHandler);
 
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
@@ -82,6 +85,17 @@ public class Server {
         clearService.clearAllData();
 
         return "";
+    }
+    private Object createGameHandler(Request req, Response res) throws DataAccessException {
+        GameData gameName = new Gson().fromJson(req.body(), GameData.class);
+        String authToken = req.headers("authorization");
+
+        int gameId = createGameService.createGameRequest(gameName,authToken);
+        Map<String, Integer> responseMap = Map.of("gameID",gameId);
+
+        res.body(new Gson().toJson(responseMap));
+
+        return res.body();
     }
 
     public void stop() {
