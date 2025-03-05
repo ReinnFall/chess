@@ -28,4 +28,8 @@ public class MemoryGameDAO implements GameDAO{
         // I need the original ID before it was incremented
         return nextID - 1;
     }
+    public Collection<GameData> listGames(){
+
+    }
+
 }

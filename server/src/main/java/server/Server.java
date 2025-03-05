@@ -8,6 +8,7 @@ import service.*;
 import spark.*;
 import model.UserData;
 
+import java.util.Collection;
 import java.util.Map;
 
 public class Server {
@@ -16,6 +17,7 @@ public class Server {
     private final LogoutService logoutService;
     private final ClearService clearService;
     private final CreateGameService createGameService;
+    private final ListGameService listGameService;
     private final UserDAO userDAO; // Potential optimization
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
@@ -29,6 +31,7 @@ public class Server {
         logoutService = new LogoutService(authDAO);
         clearService = new ClearService(userDAO,authDAO,gameDAO);
         createGameService = new CreateGameService(authDAO,gameDAO);
+        listGameService = new ListGameService(authDAO,gameDAO);
     }
 
     public int run(int desiredPort) {
@@ -42,6 +45,7 @@ public class Server {
         Spark.delete("/session", this::logoutHandler);
         Spark.delete("/db", this::clearHandler);
         Spark.post("game",this::createGameHandler);
+        Spark.get("/game",this::listGameHandler);
 
 
         Spark.exception(DataAccessException.class, this::exceptionHandler);
@@ -94,6 +98,14 @@ public class Server {
         Map<String, Integer> responseMap = Map.of("gameID",gameId);
 
         res.body(new Gson().toJson(responseMap));
+
+        return res.body();
+    }
+    private Object listGameHandler(Request req, Response res) throws DataAccessException{
+        String authToken = req.headers("authorization");
+        Collection<GameData> games = listGameService.listGameRequest(authToken);
+
+        res.body(new Gson().toJson(games));
 
         return res.body();
     }
