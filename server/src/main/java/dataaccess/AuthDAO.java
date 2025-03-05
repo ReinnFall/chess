@@ -8,4 +8,5 @@ public interface AuthDAO{
     public void deleteAuth(AuthData data) throws DataAccessException;
     public void clearAuthData();
     public AuthData getAuthByUsername(String username);
+
 }
