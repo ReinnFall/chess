@@ -20,6 +20,15 @@ public class MemoryAuthDAO implements AuthDAO{
         }
         return null;
     }
+    //Method for Testing
+    public AuthData getAuthByUsername(String username){
+        for ( AuthData currentToken : authDataCollection){
+            if (Objects.equals(currentToken.username(), username)){ // change with equals
+                return currentToken;
+            }
+        }
+        return null;
+    }
     public void deleteAuth(AuthData data){
         authDataCollection.remove(data);
     }

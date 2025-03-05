@@ -24,6 +24,7 @@ public class MemoryGameDAO implements GameDAO{
         ChessGame newGame = new ChessGame();
         GameData newGameData = new GameData(nextID++,"",
                 "",gameName,newGame);
+        gameDataCollection.add(newGameData);
         // I need the original ID before it was incremented
         return nextID - 1;
     }

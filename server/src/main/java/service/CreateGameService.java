@@ -24,4 +24,8 @@ public class CreateGameService {
             return gameID;
         }
     }
+    //Method for Testing
+    public AuthData getAuthData(String username){
+        return authDAO.getAuthByUsername(username);
+    }
 }

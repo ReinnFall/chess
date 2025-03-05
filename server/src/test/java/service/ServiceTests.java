@@ -2,20 +2,19 @@ package service;
 
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.LoginService;
 
-import java.util.Objects;
-
-class LoginServiceTest{
+class ServiceTests {
     private UserData userInput;
     private UserData userInput2;
     private LoginService loginService;
     private RegisterService registerService;
     private LogoutService logoutService;
+    private CreateGameService createGameService;
 
     @BeforeEach
     public void beforeEach(){
@@ -23,9 +22,11 @@ class LoginServiceTest{
         userInput2 = new UserData("Jacob","Stock","js@mail");
         UserDAO userDAO = new MemoryUserDAO();
         AuthDAO authDAO = new MemoryAuthDAO();
+        GameDAO gameDAO = new MemoryGameDAO();
         loginService = new LoginService(userDAO,authDAO);
         registerService = new RegisterService(userDAO,authDAO);
         logoutService = new LogoutService(authDAO);
+        createGameService = new CreateGameService(authDAO,gameDAO);
 
     }
 
@@ -71,4 +72,21 @@ class LoginServiceTest{
         });
     }
 
+    @Test
+    public void createGameCantHaveDuplicateNames() throws DataAccessException{
+        registerService.registerRequest(userInput);
+        AuthData authData = createGameService.getAuthData(userInput.username());
+        GameData gameData = new GameData(0,null,
+                null,"Losers",null);
+        createGameService.createGameRequest(gameData,authData.authToken());
+
+        //Should throw erroe code 400 because it's using the name gameName
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            createGameService.createGameRequest(gameData,authData.authToken());
+        });
+
+
+
+
+    }
 }
