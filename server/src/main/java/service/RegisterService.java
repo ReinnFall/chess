@@ -28,10 +28,18 @@ public class RegisterService {
             throw new DataAccessException(403,"Error: already taken");
         }
         else {
-            userDAO.createUser(data);
-            AuthData newAuthData = new AuthData(generateToken(), data.username());
-            authDAO.createAuth(newAuthData);
-            return newAuthData;
+            if(Objects.equals(data.username(), "") ||
+                    Objects.equals(data.password(), "") ||
+                    Objects.equals(data.email(), "")){
+                throw new DataAccessException(400, "Error: bad request");
+            }
+            else{
+                userDAO.createUser(data);
+                AuthData newAuthData = new AuthData(generateToken(), data.username());
+                authDAO.createAuth(newAuthData);
+                return newAuthData;
+            }
+
         }
     }
 }
