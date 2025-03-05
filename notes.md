@@ -1,3 +1,3 @@
 Phase 3 Questions
-1. Petshop has a private service variable in server  and a private dataaccess variable in service. What the benefits of doing this?
 2. Potential Error - Same username can continually login
+3. Are gameID, team usernames, the game Name assigned with game in GameData or assigned to the game.
