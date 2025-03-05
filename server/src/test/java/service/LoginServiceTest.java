@@ -15,6 +15,7 @@ class LoginServiceTest{
     private UserData userInput2;
     private LoginService loginService;
     private RegisterService registerService;
+    private LogoutService logoutService;
 
     @BeforeEach
     public void beforeEach(){
@@ -24,6 +25,7 @@ class LoginServiceTest{
         AuthDAO authDAO = new MemoryAuthDAO();
         loginService = new LoginService(userDAO,authDAO);
         registerService = new RegisterService(userDAO,authDAO);
+        logoutService = new LogoutService(authDAO);
 
     }
 
@@ -59,4 +61,14 @@ class LoginServiceTest{
             registerService.registerRequest(userInput);
         });
     }
+    @Test
+    public void logoutDeletesAuthData() throws DataAccessException{
+        String badToken = "123";
+        registerService.registerRequest(userInput);
+
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            logoutService.logoutRequest(badToken);
+        });
+    }
+
 }
