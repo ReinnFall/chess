@@ -28,8 +28,7 @@ public class MemoryGameDAO implements GameDAO{
             }
         }
         ChessGame newGame = new ChessGame();
-        GameData newGameData = new GameData(nextID++,"",
-                "",gameName,newGame);
+        GameData newGameData = new GameData(nextID++,null, null,gameName,newGame);
         gameDataCollection.add(newGameData);
         // I need the original ID before it was incremented
         return nextID - 1;
@@ -57,21 +56,25 @@ public class MemoryGameDAO implements GameDAO{
         GameData updatedGameData;
 
         if (Objects.equals(playerColor, "WHITE")) {
-            if(!Objects.equals(gameData.whiteUsername(), "")){
-                throw new DataAccessException(403,"Error: already taken");
-            } else{
+            if (gameData.whiteUsername() != null) {
+                throw new DataAccessException(403, "Error: already taken");
+            } else {
                 updatedGameData = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(), gameData.game());
                 gameDataCollection.remove(gameData);
                 gameDataCollection.add(updatedGameData);
             }
-        } else{
-            if(!Objects.equals(gameData.blackUsername(), "")){
-                throw new DataAccessException(403,"Error: already taken");
+        }else if (Objects.equals(playerColor, "BLACK")) {
+            if (gameData.blackUsername() != null) {
+                throw new DataAccessException(403, "Error: already taken");
+            } else {
+                updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
+                gameDataCollection.remove(gameData);
+                gameDataCollection.add(updatedGameData);
             }
-            updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
-            gameDataCollection.remove(gameData);
-            gameDataCollection.add(updatedGameData);
+        } else{
+            throw new DataAccessException(400,"Error: bad request");
         }
+
     }
 
 }

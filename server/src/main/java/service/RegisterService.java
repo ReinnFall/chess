@@ -28,9 +28,7 @@ public class RegisterService {
             throw new DataAccessException(403,"Error: already taken");
         }
         else {
-            if(Objects.equals(data.username(), "") ||
-                    Objects.equals(data.password(), "") ||
-                    Objects.equals(data.email(), "")){
+            if(data.username() == null || data.password() == null || data.email() == null){
                 throw new DataAccessException(400, "Error: bad request");
             }
             else{

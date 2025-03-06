@@ -27,7 +27,7 @@ public class LoginService{
         UserData dataFromMemory = userDAO.getUser(data.username());
         if (dataFromMemory == null){
             //return the error code message for username not found
-            throw new DataAccessException(500,"Error: username not found");
+            throw new DataAccessException(401,"Error: username not found");
         }
         //assert dataFromMemory != null;
         if (!Objects.equals(data.password(), dataFromMemory.password())){ // Look into equals method

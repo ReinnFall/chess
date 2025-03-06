@@ -108,16 +108,17 @@ public class Server {
     private Object listGameHandler(Request req, Response res) throws DataAccessException{
         String authToken = req.headers("authorization");
         Collection<GameData> games = listGameService.listGameRequest(authToken);
+        Map<String, Collection<GameData>> responseMap = Map.of("games",games);
 
-        res.body(new Gson().toJson(games));
+        res.body(new Gson().toJson(responseMap));
 
         return res.body();
     }
     private Object joinGameHandler(Request req, Response res) throws DataAccessException{
         String authToken = req.headers("authorization");
-        JoinGameData playerColorandID = new Gson().fromJson(req.body(), JoinGameData.class);
+        JoinGameData playerColorAndID = new Gson().fromJson(req.body(), JoinGameData.class);
 
-        joinGameService.joinGameRequest(playerColorandID,authToken);
+        joinGameService.joinGameRequest(playerColorAndID,authToken);
         return "";
     }
 
