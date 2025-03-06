@@ -19,4 +19,8 @@ public class LogoutService {
             authDAO.deleteAuth(authFromMemory);
         }
     }
+    //Method for Testing
+    public AuthData getAuthData(String username){
+        return authDAO.getAuthByUsername(username);
+    }
 }

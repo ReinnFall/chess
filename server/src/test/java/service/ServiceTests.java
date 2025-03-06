@@ -3,10 +3,15 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
+import model.JoinGameData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.crypto.Data;
+import java.util.Collection;
+import java.util.HashSet;
 
 class ServiceTests {
     private UserData userInput;
@@ -17,15 +22,16 @@ class ServiceTests {
     private RegisterService registerService;
     private LogoutService logoutService;
     private CreateGameService createGameService;
+    private ListGameService listGameService;
+    private JoinGameService joinGameService;
+    private ClearService clearService;
 
     @BeforeEach
     public void beforeEach(){
         userInput = new UserData("James","Stock","js@mail");
         userInput2 = new UserData("Jacob","Stock","js@mail");
-        gameData = new GameData(0,null,
-                null,"Losers",null);
-        gameData2 = new GameData(0,null,
-                null,"Winners",null);
+        gameData = new GameData(0,null, null,"Losers",null);
+        gameData2 = new GameData(0,null, null,"Winners",null);
         UserDAO userDAO = new MemoryUserDAO();
         AuthDAO authDAO = new MemoryAuthDAO();
         GameDAO gameDAO = new MemoryGameDAO();
@@ -33,6 +39,9 @@ class ServiceTests {
         registerService = new RegisterService(userDAO,authDAO);
         logoutService = new LogoutService(authDAO);
         createGameService = new CreateGameService(authDAO,gameDAO);
+        listGameService = new ListGameService(authDAO, gameDAO);
+        joinGameService = new JoinGameService(authDAO,gameDAO);
+        clearService = new ClearService(userDAO,authDAO,gameDAO);
 
     }
 
@@ -69,13 +78,25 @@ class ServiceTests {
         });
     }
     @Test
-    public void logoutDeletesAuthData() throws DataAccessException{
+    public void logoutNeedsCorrectAuthData() throws DataAccessException{
         String badToken = "123";
         registerService.registerRequest(userInput);
 
         DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
             logoutService.logoutRequest(badToken);
         });
+    }
+    @Test
+    public void logoutSuccessfullyDeletesAuthData() throws DataAccessException{
+        registerService.registerRequest(userInput);
+        AuthData authData = logoutService.getAuthData("James");
+        logoutService.logoutRequest(authData.authToken());
+
+        //Attempting to use old AuthToken
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            listGameService.listGameRequest(authData.authToken());
+        });
+
     }
 
     @Test
@@ -98,5 +119,66 @@ class ServiceTests {
 
         Assertions.assertNotEquals(gameIDFirstGame,gameIDSecondGame);
 
+    }
+
+    @Test
+    public void listGamesRequiresCorrectAuth() throws DataAccessException{
+        registerService.registerRequest(userInput);
+        String badToken = "123";
+
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            listGameService.listGameRequest(badToken);
+        });
+    }
+    @Test
+    public void listGamesWorksCorrectly() throws DataAccessException{
+        registerService.registerRequest(userInput);
+        AuthData authData = createGameService.getAuthData(userInput.username());
+
+        createGameService.createGameRequest(gameData,authData.authToken());
+        GameData expectedData = new GameData(1,null,null,"Losers",null);
+
+        Collection<GameData> expected = new HashSet<>();
+        expected.add(expectedData);
+        Collection<GameData> actual = listGameService.listGameRequest(authData.authToken());
+
+        Assertions.assertEquals(expected,actual);
+    }
+    @Test
+    public void joinGameRequiresCorrectID() throws DataAccessException{
+        JoinGameData badID = new JoinGameData("WHITE",500);
+        registerService.registerRequest(userInput);
+        AuthData authData = createGameService.getAuthData(userInput.username());
+        createGameService.createGameRequest(gameData,authData.authToken());
+
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            joinGameService.joinGameRequest(badID, authData.authToken());
+        });
+    }
+    @Test
+    public void joinGameSuccessfullyAddsUser() throws DataAccessException{
+        registerService.registerRequest(userInput);
+        AuthData authData = createGameService.getAuthData(userInput.username());
+        createGameService.createGameRequest(gameData,authData.authToken());
+
+        JoinGameData goodData = new JoinGameData("WHITE",1);
+        joinGameService.joinGameRequest(goodData,authData.authToken());
+
+        GameData expectedData = new GameData(1,"James",null,"Losers",null);
+
+        Collection<GameData> expected = new HashSet<>();
+        expected.add(expectedData);
+        Collection<GameData> actual = listGameService.listGameRequest(authData.authToken());
+
+        Assertions.assertEquals(expected,actual);
+    }
+    @Test
+    public void clearDeletesUserData() throws DataAccessException{
+        registerService.registerRequest(userInput);
+        clearService.clearAllData();
+
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            loginService.loginRequest(userInput);
+        });
     }
 }
