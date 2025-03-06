@@ -66,7 +66,11 @@ public class ChessPiece {
         possibleMoves.add(new ChessMove(myPosition,nextPosition,PieceType.KNIGHT));
 
     }
-
+    private void addMoveIfNull(ChessBoard board, ChessPosition myPosition, ChessPosition nextPosition, Collection<ChessMove> possibleMoves){
+        if(board.getPiece(nextPosition) == null){
+            possibleMoves.add(new ChessMove(myPosition,nextPosition,null));
+        }
+    }
     public void blackPawnMoves(ChessBoard board, ChessPosition myPosition, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves, boolean isDiagonal){
         for (int i = 1; i <= limit; i++) {
             ChessPosition nextPiece = new ChessPosition((myPosition.getRow() + i * rowDir), (myPosition.getColumn() + i * colDir));
@@ -81,9 +85,7 @@ public class ChessPiece {
                     possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
                     if(myPosition.getRow() == 7){
                         ChessPosition nextPosition = new ChessPosition(myPosition.getRow() -2, myPosition.getColumn());
-                        if(board.getPiece(nextPosition) == null){
-                            possibleMoves.add(new ChessMove(myPosition,nextPosition,null));
-                        }
+                        addMoveIfNull(board,myPosition,nextPosition,possibleMoves);
                     }
                 }
             }
@@ -115,9 +117,7 @@ public class ChessPiece {
                     possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
                     if(myPosition.getRow() == 2){
                         ChessPosition nextPosition = new ChessPosition(myPosition.getRow() +2, myPosition.getColumn());
-                        if(board.getPiece(nextPosition) == null){
-                            possibleMoves.add(new ChessMove(myPosition,nextPosition,null));
-                        }
+                        addMoveIfNull(board,myPosition,nextPosition,possibleMoves);
                     }
                 }
             }

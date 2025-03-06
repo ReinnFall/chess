@@ -13,14 +13,7 @@ public class MemoryGameDAO implements GameDAO{
     public void clearGameData() {
         gameDataCollection.clear();
     }
-    public GameData findGame(GameData gameData){
-        for ( GameData data : gameDataCollection) {
-            if (Objects.equals(data, gameData)){
-                return data;
-            }
-        }
-        return null;
-    }
+
     public int createGame(String gameName) throws DataAccessException {
         for ( GameData data : gameDataCollection){
             if (Objects.equals(data.gameName(), gameName)){
