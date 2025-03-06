@@ -61,7 +61,7 @@ public class Server {
         return Spark.port();
     }
     private void exceptionHandler(DataAccessException ex, Request req, Response res) {
-        res.status(ex.StatusCode());
+        res.status(ex.statusCode());
         res.body(ex.toJsonCustom());
     }
     private Object loginHandler(Request req, Response res) throws DataAccessException {
