@@ -59,6 +59,13 @@ public class ChessPiece {
         return pieceType;
         //throw new RuntimeException("Not implemented");
     }
+    private void promotionPawnMoves(ChessPosition myPosition,ChessPosition nextPosition, Collection<ChessMove> possibleMoves){
+        possibleMoves.add(new ChessMove(myPosition,nextPosition,PieceType.QUEEN));
+        possibleMoves.add(new ChessMove(myPosition,nextPosition,PieceType.ROOK));
+        possibleMoves.add(new ChessMove(myPosition,nextPosition,PieceType.BISHOP));
+        possibleMoves.add(new ChessMove(myPosition,nextPosition,PieceType.KNIGHT));
+
+    }
 
     public void blackPawnMoves(ChessBoard board, ChessPosition myPosition, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves, boolean isDiagonal){
         for (int i = 1; i <= limit; i++) {
@@ -68,10 +75,7 @@ public class ChessPiece {
             }
             if(board.getPiece(nextPiece) == null && !isDiagonal) {
                 if (nextPiece.getRow() == 1) {
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                    promotionPawnMoves(myPosition,nextPiece,possibleMoves);
                 }
                 else{
                     possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
@@ -86,10 +90,7 @@ public class ChessPiece {
             if(board.getPiece(nextPiece) != null){
                 if(board.getPiece(nextPiece).getTeamColor() == ChessGame.TeamColor.WHITE){
                     if (nextPiece.getRow() == 1) {
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                        promotionPawnMoves(myPosition,nextPiece,possibleMoves);
                     }
                     else{
                         possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
@@ -108,10 +109,7 @@ public class ChessPiece {
             }
             if(board.getPiece(nextPiece) == null && isDiagonal == false) {
                 if (nextPiece.getRow() == 8) {
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
-                    possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                    promotionPawnMoves(myPosition,nextPiece,possibleMoves);
                 }
                 else{
                     possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
@@ -129,10 +127,7 @@ public class ChessPiece {
                         break;
                     }
                     if (nextPiece.getRow() == 8) {
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.QUEEN));
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.ROOK));
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.BISHOP));
-                        possibleMoves.add(new ChessMove(myPosition, nextPiece, PieceType.KNIGHT));
+                        promotionPawnMoves(myPosition,nextPiece,possibleMoves);
                     }
                     else{
                         possibleMoves.add(new ChessMove(myPosition,nextPiece,null));
