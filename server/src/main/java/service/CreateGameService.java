@@ -20,8 +20,7 @@ public class CreateGameService {
             throw new DataAccessException(401,"Error: unauthorized");
         }
         else{
-            int gameID = gameDAO.createGame(data.gameName());
-            return gameID;
+            return gameDAO.createGame(data.gameName());
         }
     }
     //Method for Testing

@@ -118,7 +118,7 @@ public class Server {
         JoinGameData playerColorandID = new Gson().fromJson(req.body(), JoinGameData.class);
 
         joinGameService.joinGameRequest(playerColorandID,authToken);
-        return null;
+        return "";
     }
 
     public void stop() {

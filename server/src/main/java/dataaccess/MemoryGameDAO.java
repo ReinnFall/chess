@@ -35,7 +35,14 @@ public class MemoryGameDAO implements GameDAO{
         return nextID - 1;
     }
     public Collection<GameData> listGames(){
-        return gameDataCollection;
+        Collection<GameData> tempCollection = new HashSet<>();
+        //We don't need ChessGame games for our output
+        //Set each game field to null but capture all the other info and push it up
+        for (GameData data : gameDataCollection){
+            GameData tempData = new GameData(data.gameID(), data.whiteUsername(), data.blackUsername(), data.gameName(), null);
+            tempCollection.add(tempData);
+        }
+        return tempCollection;
     }
     public GameData getGame(int id) throws DataAccessException {
         for ( GameData data : gameDataCollection) {
@@ -45,20 +52,26 @@ public class MemoryGameDAO implements GameDAO{
         }
         return null;
     }
+    // Need to prevent the same player from joining the game they are already apart of
     public void updateGame(GameData gameData, String playerColor, String username) throws DataAccessException {
-        gameDataCollection.remove(gameData);
         GameData updatedGameData;
 
         if (Objects.equals(playerColor, "WHITE")) {
-            updatedGameData = new GameData(gameData.gameID(), username, "", gameData.gameName(), gameData.game());
-            gameDataCollection.add(updatedGameData);
-        }
-        else{
-            updatedGameData = new GameData(gameData.gameID(), "", username, gameData.gameName(), gameData.game());
+            if(!Objects.equals(gameData.whiteUsername(), "")){
+                throw new DataAccessException(403,"Error: already taken");
+            } else{
+                updatedGameData = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(), gameData.game());
+                gameDataCollection.remove(gameData);
+                gameDataCollection.add(updatedGameData);
+            }
+        } else{
+            if(!Objects.equals(gameData.blackUsername(), "")){
+                throw new DataAccessException(403,"Error: already taken");
+            }
+            updatedGameData = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
+            gameDataCollection.remove(gameData);
             gameDataCollection.add(updatedGameData);
         }
     }
-
-
 
 }
