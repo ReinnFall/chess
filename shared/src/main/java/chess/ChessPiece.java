@@ -182,101 +182,69 @@ public class ChessPiece {
         if (pieceType == PieceType.PAWN) {
             if(pieceColor == ChessGame.TeamColor.WHITE){
                 int limit = 1;
-                // Up One
+                // 3 Spaces ahead of white pawn
                 whitePawnMoves(board,myPosition,limit,rowUp,colSame,possibleMoves,notDiagonal);
-                // Check Up 1 Right 1
                 whitePawnMoves(board,myPosition,limit,rowUp,colRight,possibleMoves,diagonal);
-                // Check Up 1 Left 1
                 whitePawnMoves(board,myPosition,limit,rowUp,colLeft,possibleMoves,diagonal);
             }
             if(pieceColor == ChessGame.TeamColor.BLACK){
                 int limit = 1;
-                // Down One
+                // 3 spaces "behind" black pawn
                 blackPawnMoves(board,myPosition,limit,rowDown,colSame,possibleMoves,notDiagonal);
-                // Check Down 1 Right 1
                 blackPawnMoves(board,myPosition,limit,rowDown,colRight,possibleMoves,diagonal);
-                // Check Down 1 Left 1
                 blackPawnMoves(board,myPosition,limit,rowDown,colLeft,possibleMoves,diagonal);
             }
-
         }
         if (pieceType == PieceType.ROOK){
             int limit = 8;
-            // Rook Left Moves
+            // Cardinal directions
             moveAcrossBoard(myPosition,board,limit,rowSame,colLeft,possibleMoves);
-            // Rook Right Moves
             moveAcrossBoard(myPosition,board,limit,rowSame,colRight,possibleMoves);
-            // Rook Up Moves
             moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
-            // Rook Down Moves
             moveAcrossBoard(myPosition,board,limit,rowDown,colSame,possibleMoves);
         }
         if (pieceType == PieceType.KING){
             int limit = 1;
-            // King Up Move
+            // King 8 moves around itself
             moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
-            // King Up Right Move
             moveAcrossBoard(myPosition,board,limit,rowUp,colRight,possibleMoves);
-            // King Up Left Move
             moveAcrossBoard(myPosition,board,limit,rowUp,colLeft,possibleMoves);
-            // King Right Move
             moveAcrossBoard(myPosition,board,limit,rowSame,colRight,possibleMoves);
-            // King Left Move
             moveAcrossBoard(myPosition,board,limit,rowSame,colLeft,possibleMoves);
-            // King Down Move
             moveAcrossBoard(myPosition,board,limit,rowDown,colSame,possibleMoves);
-            // King Down Right Move
             moveAcrossBoard(myPosition,board,limit,rowDown,colRight,possibleMoves);
-            // King Down Left Move
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
         if (pieceType == PieceType.BISHOP){
             int limit = 8;
-            // Bishop Diagonal Up Right
+            // Bishop Diagonal Directions
             moveAcrossBoard(myPosition,board,limit,rowUp,colRight,possibleMoves);
-            // Bishop Diagonal Up Left
             moveAcrossBoard(myPosition,board,limit,rowUp,colLeft,possibleMoves);
-            // Bishop Diagonal Down Right
             moveAcrossBoard(myPosition,board,limit,rowDown,colRight,possibleMoves);
-            // Bishop Diagonal Down Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
         if (pieceType == PieceType.QUEEN){
             int limit = 8;
-            // Queen Up
+            // Queen all directions
             moveAcrossBoard(myPosition,board,limit,rowUp,colSame,possibleMoves);
-            // Queen Down
             moveAcrossBoard(myPosition,board,limit,rowDown,colSame,possibleMoves);
-            // Queen Right
             moveAcrossBoard(myPosition,board,limit,rowSame,colRight,possibleMoves);
-            // Queen Left
             moveAcrossBoard(myPosition,board,limit,rowSame,colLeft,possibleMoves);
-            // Queen Up Right
             moveAcrossBoard(myPosition,board,limit,rowUp,colRight,possibleMoves);
-            // Queen Up Left
             moveAcrossBoard(myPosition,board,limit,rowUp,colLeft,possibleMoves);
-            // Queen Down Right
             moveAcrossBoard(myPosition,board,limit,rowDown,colRight,possibleMoves);
-            // Queen Down Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeft,possibleMoves);
         }
         if (pieceType == PieceType.KNIGHT){
             int limit = 1;
-            // Knight 2 Up 1 Right
+            // Knight L Moves
             moveAcrossBoard(myPosition,board,limit,rowUpTwo,colRight,possibleMoves);
-            // Knight 2 Up 1 Left
             moveAcrossBoard(myPosition,board,limit,rowUpTwo,colLeft,possibleMoves);
-            // Knight 1 Up 2 Right
             moveAcrossBoard(myPosition,board,limit,rowUp,colRightTwo,possibleMoves);
-            // Knight 1 Up 2 Left
             moveAcrossBoard(myPosition,board,limit,rowUp,colLeftTwo,possibleMoves);
-            // Knight 2 Down 1 Right
             moveAcrossBoard(myPosition,board,limit,rowDownTwo,colRight,possibleMoves);
-            // Knight 2 Down 1 Left
             moveAcrossBoard(myPosition,board,limit,rowDownTwo,colLeft,possibleMoves);
-            // Knight 1 Down 2 Right
             moveAcrossBoard(myPosition,board,limit,rowDown,colRightTwo,possibleMoves);
-            // Knight 1 Down 2 Left
             moveAcrossBoard(myPosition,board,limit,rowDown,colLeftTwo,possibleMoves);
         }
             return possibleMoves;
