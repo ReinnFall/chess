@@ -71,7 +71,9 @@ public class ChessPiece {
             possibleMoves.add(new ChessMove(myPosition,nextPosition,null));
         }
     }
-    public void blackPawnMoves(ChessBoard board, ChessPosition myPosition, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves, boolean isDiagonal){
+    public void blackPawnMoves(ChessBoard board, ChessPosition myPosition, int limit,
+                               int rowDir, int colDir, Collection<ChessMove> possibleMoves,
+                               boolean isDiagonal){
         for (int i = 1; i <= limit; i++) {
             ChessPosition nextPiece = new ChessPosition((myPosition.getRow() + i * rowDir), (myPosition.getColumn() + i * colDir));
             if (nextPiece.getRow() < 1 || nextPiece.getRow() > 8 || nextPiece.getColumn() < 1 || nextPiece.getColumn() > 8) {
@@ -103,7 +105,9 @@ public class ChessPiece {
         }
     }
 
-    public void whitePawnMoves(ChessBoard board, ChessPosition myPosition, int limit, int rowDir, int colDir, Collection<ChessMove> possibleMoves, boolean isDiagonal){
+    public void whitePawnMoves(ChessBoard board, ChessPosition myPosition, int limit,
+                               int rowDir, int colDir, Collection<ChessMove> possibleMoves,
+                               boolean isDiagonal){
         for (int i = 1; i <= limit; i++) {
             ChessPosition nextPiece = new ChessPosition((myPosition.getRow() + i * rowDir), (myPosition.getColumn() + i * colDir));
             if (nextPiece.getRow() < 1 || nextPiece.getRow() > 8 || nextPiece.getColumn() < 1 || nextPiece.getColumn() > 8) {
