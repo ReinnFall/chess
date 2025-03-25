@@ -11,6 +11,7 @@ import model.UserData;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 public class Server {
     private final LoginService loginService;
@@ -24,10 +25,16 @@ public class Server {
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
 
-    public Server(){
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
-        gameDAO = new MemoryGameDAO();
+    public Server(String optionSelect) throws DataAccessException {
+        if(Objects.equals(optionSelect, "sql")){
+            userDAO = new MySqlUserDAO();
+            authDAO = new MySqlAuthDAO();
+            gameDAO = new MySqlGameDAO();
+        } else{
+            userDAO = new MemoryUserDAO();
+            authDAO = new MemoryAuthDAO();
+            gameDAO = new MemoryGameDAO();
+        }
         loginService = new LoginService(userDAO,authDAO);
         registerService = new RegisterService(userDAO,authDAO);
         logoutService = new LogoutService(authDAO);
