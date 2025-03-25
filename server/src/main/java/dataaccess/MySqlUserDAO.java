@@ -4,6 +4,16 @@ import model.UserData;
 
 public class MySqlUserDAO implements UserDAO{
 
+    private final String[] createStatements = {
+            """
+            
+            """
+    };
+
+    public MySqlUserDAO() throws DataAccessException{
+        ConfigureDatabase.configureDatabase(createStatements);
+    }
+
     @Override
     public UserData getUser(String username) throws DataAccessException {
         return null;
@@ -18,7 +28,4 @@ public class MySqlUserDAO implements UserDAO{
     public void clearUserData() {
 
     }
-    private final String[] createStatements = {
-
-    };
 }

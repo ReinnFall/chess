@@ -7,6 +7,16 @@ import java.util.List;
 
 public class MySqlGameDAO implements GameDAO{
 
+    private final String[] createStatements = {
+            """
+            
+            """
+    };
+
+    public MySqlGameDAO() throws DataAccessException{
+        ConfigureDatabase.configureDatabase(createStatements);
+    }
+
     @Override
     public void clearGameData() {
 
@@ -31,7 +41,4 @@ public class MySqlGameDAO implements GameDAO{
     public void updateGame(GameData gameData, String playerColor, String username) throws DataAccessException {
 
     }
-    private final String[] createStatements = {
-
-    };
 }

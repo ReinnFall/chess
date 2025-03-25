@@ -4,6 +4,16 @@ import model.AuthData;
 
 public class MySqlAuthDAO implements AuthDAO{
 
+    private final String[] createStatements = {
+            """
+            
+            """
+    };
+
+    public MySqlAuthDAO() throws DataAccessException{
+        ConfigureDatabase.configureDatabase(createStatements);
+    }
+
     @Override
     public void createAuth(AuthData data) throws DataAccessException {
 
@@ -28,9 +38,5 @@ public class MySqlAuthDAO implements AuthDAO{
     public AuthData getAuthByUsername(String username) {
         return null;
     }
-
-    private final String[] createStatements = {
-
-    };
 
 }
