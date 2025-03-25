@@ -25,16 +25,11 @@ public class Server {
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
 
-    public Server(String optionSelect) throws DataAccessException {
-        if(Objects.equals(optionSelect, "sql")){
-            userDAO = new MySqlUserDAO();
-            authDAO = new MySqlAuthDAO();
-            gameDAO = new MySqlGameDAO();
-        } else{
-            userDAO = new MemoryUserDAO();
-            authDAO = new MemoryAuthDAO();
-            gameDAO = new MemoryGameDAO();
-        }
+    public Server() throws DataAccessException {
+        userDAO = new MySqlUserDAO();
+        authDAO = new MySqlAuthDAO();
+        gameDAO = new MySqlGameDAO();
+
         loginService = new LoginService(userDAO,authDAO);
         registerService = new RegisterService(userDAO,authDAO);
         logoutService = new LogoutService(authDAO);
