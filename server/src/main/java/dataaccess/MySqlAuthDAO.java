@@ -6,7 +6,11 @@ public class MySqlAuthDAO implements AuthDAO{
 
     private final String[] createStatements = {
             """
-            
+            CREATE TABLE IF NOT EXISTS AuthData (
+                authToken varchar(255) PRIMARY KEY,
+                username varchar(255) NOT NULL,
+                FOREIGN KEY (username) references UserData(username)
+            )
             """
     };
 

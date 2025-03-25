@@ -9,7 +9,15 @@ public class MySqlGameDAO implements GameDAO{
 
     private final String[] createStatements = {
             """
-            
+            CREATE TABLE IF NOT EXISTS GameData (
+                id int auto_increment PRIMARY KEY,
+                gameName varchar(255) unique NOT NULL,
+                whiteUsername varchar(255),
+                blackUsername varchar(255),
+                game Text,
+                FOREIGN KEY (whiteUsername) references UserData(username),
+                FOREIGN KEY (blackUsername) references UserData(username)
+            )
             """
     };
 
