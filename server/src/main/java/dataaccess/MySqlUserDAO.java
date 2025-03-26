@@ -24,15 +24,30 @@ public class MySqlUserDAO implements UserDAO{
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-
-
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "SELECT username, password, email" + "FROM UserData" +
+                    "WHERE username = ?";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setString(1,username);
+                try(var resultStatement = stmt.executeQuery()){
+                    if (resultStatement.next()){
+                        String usernameFromDB = resultStatement.getString("username");
+                        String passwordFromDB = resultStatement.getString("password");
+                        String emailFromDB = resultStatement.getString("email");
+                        return new UserData(usernameFromDB,passwordFromDB,emailFromDB);
+                    }
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataAccessException(500, "Could not find user");
+        }
         return null;
     }
 
     @Override
     public void createUser(UserData data) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()){
-            var statement = "INSERT INTO UserData (name, type, json) VALUES (?, ?, ?)";
+            var statement = "INSERT INTO UserData (username, password, email) VALUES (?, ?, ?)";
             String hashedPassword = BCrypt.hashpw(data.password(), BCrypt.gensalt());
 
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
@@ -47,7 +62,14 @@ public class MySqlUserDAO implements UserDAO{
     }
 
     @Override
-    public void clearUserData() {
-
+    public void clearUserData() throws DataAccessException {
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "DELETE FROM UserDate";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.executeUpdate();
+            }
+        } catch (DataAccessException | SQLException ex){
+            throw new DataAccessException(500, "Could not create user");
+        }
     }
 }
