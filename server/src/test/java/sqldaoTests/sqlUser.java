@@ -49,10 +49,25 @@ public class sqlUser {
             throw new DataAccessException(500,"Test failed");
         }
     }
-
     @Test
     public void getUserPositive() throws DataAccessException{
+        UserData goodData = new UserData("James","Stock", "js@mail");
+        userDAO.createUser(goodData);
 
+        UserData actual = userDAO.getUser("James");
+        assertEquals("James", actual.username());
+        assertEquals("js@mail", actual.email());
+        assertNotEquals("Stock", actual.password());
+    }
+    @Test
+    public void getUserNegative() throws DataAccessException{
+        UserData goodData = new UserData("James","Stock", "js@mail");
+        userDAO.createUser(goodData);
+
+        String notInDB = "Jacob";
+
+       UserData result = userDAO.getUser(notInDB);
+       assertEquals(null,result); // When getUser returns null, it means that name wasn't found
     }
 }
 

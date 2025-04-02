@@ -25,7 +25,7 @@ public class MySqlUserDAO implements UserDAO{
     @Override
     public UserData getUser(String username) throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()){
-            var statement = "SELECT username, password, email" + "FROM UserData" +
+            var statement = "SELECT username, password, email " + "FROM UserData " +
                     "WHERE username = ?";
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
                 stmt.setString(1,username);
@@ -41,7 +41,7 @@ public class MySqlUserDAO implements UserDAO{
         } catch (DataAccessException | SQLException ex) {
             throw new DataAccessException(500, "Could not find user");
         }
-        return null;
+        return null; // Returning null here will signal that the name isn't in DB
     }
 
     @Override
