@@ -21,14 +21,20 @@ public class Server {
     private final CreateGameService createGameService;
     private final ListGameService listGameService;
     private final JoinGameService joinGameService;
-    private final UserDAO userDAO; // Potential optimization
-    private final AuthDAO authDAO;
-    private final GameDAO gameDAO;
+    private  UserDAO userDAO; // Potential optimization
+    private  AuthDAO authDAO;
+    private  GameDAO gameDAO;
 
-    public Server() throws DataAccessException {
-        userDAO = new MySqlUserDAO();
-        authDAO = new MySqlAuthDAO();
-        gameDAO = new MySqlGameDAO();
+    public Server() {
+        try{
+            userDAO = new MySqlUserDAO();
+            authDAO = new MySqlAuthDAO();
+            gameDAO = new MySqlGameDAO();
+        } catch (Exception ex){
+            userDAO = new MemoryUserDAO();
+            authDAO = new MemoryAuthDAO();
+            gameDAO = new MemoryGameDAO();
+        }
 
         loginService = new LoginService(userDAO,authDAO);
         registerService = new RegisterService(userDAO,authDAO);

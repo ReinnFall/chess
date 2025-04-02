@@ -46,6 +46,9 @@ public class MySqlUserDAO implements UserDAO{
 
     @Override
     public void createUser(UserData data) throws DataAccessException {
+        if (data.username() == null || data.password() == null  || data.email() == null){
+            throw new DataAccessException(401,"Error: Invalid user input");
+        }
         try (var connection = DatabaseManager.getConnection()){
             var statement = "INSERT INTO UserData (username, password, email) VALUES (?, ?, ?)";
             String hashedPassword = BCrypt.hashpw(data.password(), BCrypt.gensalt());
@@ -64,12 +67,12 @@ public class MySqlUserDAO implements UserDAO{
     @Override
     public void clearUserData() throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()){
-            var statement = "DELETE FROM UserDate";
+            var statement = "DELETE FROM UserData";
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
                 stmt.executeUpdate();
             }
         } catch (DataAccessException | SQLException ex){
-            throw new DataAccessException(500, "Could not create user");
+            throw new DataAccessException(500, "Error clearing user data");
         }
     }
 }
