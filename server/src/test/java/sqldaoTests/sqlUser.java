@@ -69,6 +69,16 @@ public class sqlUser {
        UserData result = userDAO.getUser(notInDB);
        assertEquals(null,result); // When getUser returns null, it means that name wasn't found
     }
+    @Test
+    public void clearUserData() throws DataAccessException{
+        UserData goodData = new UserData("James","Stock", "js@mail");
+        userDAO.createUser(goodData);
+
+        userDAO.clearUserData();
+
+        UserData result = userDAO.getUser(goodData.username());
+        assertEquals(null,result); // When getUser returns null, it means that name wasn't found
+    }
 }
 
 
