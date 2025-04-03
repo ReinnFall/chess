@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 public class MySqlGameDAO implements GameDAO{
 
@@ -128,7 +129,34 @@ public class MySqlGameDAO implements GameDAO{
         return null;
     }
     @Override
-    public void updateGame(GameData gameData, String playerColor, String username) throws DataAccessException {
+    public void updateGame(GameData gameData, String playerColor, String username) throws DataAccessException, SQLException {
+        GameData currentGame = getGame(gameData.gameID());
+        if (currentGame == null){
+            throw new DataAccessException(404, "Game not found");
+        }
 
+        String statement;
+        if (Objects.equals(playerColor, "WHITE")){
+            if(currentGame.whiteUsername() != null){
+                throw new DataAccessException(403, "Error: already taken");
+            }
+            statement = "UPDATE GameData SET whiteUsername = ? WHERE gameID = ?";
+        } else if (Objects.equals(playerColor,"BLACK")){
+            if(currentGame.blackUsername() != null){
+                throw new DataAccessException(403, "Error: already taken");
+            }
+            statement = "UPDATE GameData SET blackUsername = ? WHERE gameID = ?";
+        } else{
+            throw new DataAccessException(400,"Error: bad request");
+        }
+        try (var connection = DatabaseManager.getConnection()){
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setString(1,username);
+                stmt.setInt(2,gameData.gameID());
+                stmt.executeUpdate();
+            }
+        }catch(Exception ex){
+            throw new DataAccessException(500,"Failed to update game");
+        }
     }
 }
