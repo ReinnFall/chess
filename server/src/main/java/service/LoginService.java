@@ -5,6 +5,7 @@ import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import dataaccess.UserDAO;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -24,13 +25,13 @@ public class LoginService{
     }
     public AuthData loginRequest(UserData data) throws DataAccessException {
 
-        UserData dataFromMemory = userDAO.getUser(data.username());
-        if (dataFromMemory == null){
+        UserData dataFromStorage = userDAO.getUser(data.username());
+        if (dataFromStorage == null){
             //return the error code message for username not found
             throw new DataAccessException(401,"Error: username not found");
         }
         //assert dataFromMemory != null;
-        if (!Objects.equals(data.password(), dataFromMemory.password())){ // Look into equals method
+        if (!BCrypt.checkpw(data.password(), dataFromStorage.password())){ // Look into equals method
             //return error code message for unauthorized
             throw new DataAccessException(401,"Error: unauthorized");
         }
