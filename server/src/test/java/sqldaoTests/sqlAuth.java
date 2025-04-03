@@ -46,4 +46,12 @@ public class sqlAuth {
             throw new DataAccessException(500,"Test failed");
         }
     }
+    @Test
+    public void createAuthNegative() throws DataAccessException{
+        AuthData data = new AuthData("token","James");
+        //throws an error if user isn't in UserData
+        DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
+            authDAO.createAuth(data);
+        });
+    }
 }
