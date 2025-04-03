@@ -1,4 +1,4 @@
-package sequelTests;
+package sequeltests;
 
 import dataaccess.*;
 import model.GameData;
@@ -14,7 +14,7 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class sequelGame {
+public class SequelGame {
     private MySqlGameDAO gameDAO;
 
     @BeforeEach

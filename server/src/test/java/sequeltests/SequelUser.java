@@ -1,4 +1,4 @@
-package sequelTests;
+package sequeltests;
 
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class sequelUser {
+public class SequelUser {
     private MySqlUserDAO userDAO;
 
     @BeforeEach
