@@ -7,6 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,11 +16,11 @@ public class MySqlGameDAO implements GameDAO{
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS GameData (
-                id int auto_increment PRIMARY KEY,
+                gameID int auto_increment PRIMARY KEY,
                 gameName varchar(255) unique NOT NULL,
                 whiteUsername varchar(255),
                 blackUsername varchar(255),
-                game Text,
+                `game` Text,
                 FOREIGN KEY (whiteUsername) references UserData(username),
                 FOREIGN KEY (blackUsername) references UserData(username)
             )
@@ -52,7 +53,7 @@ public class MySqlGameDAO implements GameDAO{
             ChessGame newGame = new ChessGame();
             String serializedGame = serializer(newGame);
 
-            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+            try(PreparedStatement stmt = connection.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)){
                 stmt.setString(1, gameName);
                 stmt.setString(2,null);
                 stmt.setString(3,null);
@@ -71,7 +72,6 @@ public class MySqlGameDAO implements GameDAO{
             throw new DataAccessException(500, "Could not create game");
         }
     }
-
     @Override
     public Collection<GameData> listGames() {
         return List.of();
