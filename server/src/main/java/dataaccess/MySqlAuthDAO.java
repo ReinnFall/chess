@@ -24,9 +24,6 @@ public class MySqlAuthDAO implements AuthDAO{
 
     @Override
     public void createAuth(AuthData data) throws DataAccessException {
-//        if (data.authToken() == null || data.username() == null){
-//            throw new DataAccessException(401,"Error: Invalid user input");
-//        }
         try (var connection = DatabaseManager.getConnection()){
             var statement = "INSERT INTO AuthData (authToken, username) VALUES (?, ?)";
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
@@ -50,8 +47,15 @@ public class MySqlAuthDAO implements AuthDAO{
     }
 
     @Override
-    public void clearAuthData() {
-
+    public void clearAuthData() throws DataAccessException {
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "DELETE FROM AuthData";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.executeUpdate();
+            }
+        } catch (DataAccessException | SQLException ex){
+            throw new DataAccessException(500, "Error clearing auth data");
+        }
     }
 
     @Override

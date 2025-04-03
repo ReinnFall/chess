@@ -29,7 +29,7 @@ public class sqlAuth {
         UserData person = new UserData("James", "Stock","js@mail" );
         userDAO.createUser(person);
 
-        AuthData data = new AuthData("James","token");
+        AuthData data = new AuthData("token","James");
         authDAO.createAuth(data);
 
         try (var connection = DatabaseManager.getConnection()){
