@@ -88,5 +88,8 @@ public class sqlAuth {
         authDAO.createAuth(data);
 
         authDAO.clearAuthData();
+
+        AuthData result = authDAO.getAuth("James");
+        assertNull(result); // null means there was no AuthData by the token given
     }
 }
