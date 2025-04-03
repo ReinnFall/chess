@@ -67,7 +67,8 @@ public class MySqlUserDAO implements UserDAO{
     @Override
     public void clearUserData() throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()){
-            var statement = "DELETE FROM UserData";
+            //"set foreign key so it doesnt check"
+            var statement = "TRUNCATE UserData";
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
                 stmt.executeUpdate();
             }

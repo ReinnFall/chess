@@ -13,10 +13,11 @@ public class MySqlAuthDAO implements AuthDAO{
             """
             CREATE TABLE IF NOT EXISTS AuthData (
                 authToken varchar(255) PRIMARY KEY,
-                username varchar(255) NOT NULL,
-                FOREIGN KEY (username) references UserData(username)
+                username varchar(255) NOT NULL
             )
             """
+
+           // FOREIGN KEY (username) references UserData(username)
     };
 
     public MySqlAuthDAO() throws DataAccessException{
@@ -73,7 +74,7 @@ public class MySqlAuthDAO implements AuthDAO{
     @Override
     public void clearAuthData() throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()){
-            var statement = "DELETE FROM AuthData";
+            var statement = "TRUNCATE AuthData";
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
                 stmt.executeUpdate();
             }

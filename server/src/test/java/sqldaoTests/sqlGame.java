@@ -24,6 +24,11 @@ public class sqlGame {
         gameDAO = new MySqlGameDAO();
         gameDAO.clearGameData();
     }
+    @AfterEach
+    public void cleanUp() throws DataAccessException{
+        gameDAO = new MySqlGameDAO();
+        gameDAO.clearGameData();
+    }
     @Test
     public void createGamePositive() throws DataAccessException{
         String gameName = "Losers";

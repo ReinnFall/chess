@@ -56,10 +56,10 @@ public class sqlAuth {
     }
     @Test
     public void createAuthNegative(){
-        AuthData data = new AuthData("token","James");
+        AuthData badData = new AuthData("token",null);
         //throws an error if user isn't in UserData
         DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
-            authDAO.createAuth(data);
+            authDAO.createAuth(badData);
         });
     }
     @Test

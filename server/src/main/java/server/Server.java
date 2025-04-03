@@ -74,13 +74,14 @@ public class Server {
         res.body(ex.toJsonCustom());
     }
     private Object loginHandler(Request req, Response res) throws DataAccessException {
-        UserData userLoginInfo = new Gson().fromJson(req.body(),UserData.class);
-        AuthData loginResult = loginService.loginRequest(userLoginInfo);
+            UserData userLoginInfo = new Gson().fromJson(req.body(), UserData.class);
+            AuthData loginResult = loginService.loginRequest(userLoginInfo);
 
-        //res.status(200);
-        res.body(new Gson().toJson(loginResult));
+            //res.status(200);
+            res.body(new Gson().toJson(loginResult));
 
-        return res.body();
+            return res.body();
+
     }
     private Object registerHandler(Request req, Response res) throws DataAccessException {
         UserData userRegisterInfo = new Gson().fromJson(req.body(),UserData.class);

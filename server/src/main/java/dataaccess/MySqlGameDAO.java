@@ -22,11 +22,11 @@ public class MySqlGameDAO implements GameDAO{
                 gameName varchar(255) unique NOT NULL,
                 whiteUsername varchar(255),
                 blackUsername varchar(255),
-                `game` Text,
-                FOREIGN KEY (whiteUsername) references UserData(username),
-                FOREIGN KEY (blackUsername) references UserData(username)
+                `game` Text
             )
             """
+            // FOREIGN KEY (whiteUsername) references UserData(username),
+            //  FOREIGN KEY (blackUsername) references UserData(username)
     };
 
     public MySqlGameDAO() throws DataAccessException{
@@ -42,7 +42,7 @@ public class MySqlGameDAO implements GameDAO{
     @Override
     public void clearGameData() throws DataAccessException {
         try (var connection = DatabaseManager.getConnection()){
-            var statement = "DELETE FROM GameData";
+            var statement = "TRUNCATE GameData";
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
                 stmt.executeUpdate();
             }
