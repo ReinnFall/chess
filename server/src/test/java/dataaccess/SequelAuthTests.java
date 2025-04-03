@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SequelAuth {
+public class SequelAuthTests {
     private MySqlAuthDAO authDAO;
     private MySqlUserDAO userDAO;
 

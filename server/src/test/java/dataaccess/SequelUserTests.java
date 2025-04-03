@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SequelUser {
+public class SequelUserTests {
     private MySqlUserDAO userDAO;
 
     @BeforeEach
