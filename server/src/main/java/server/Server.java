@@ -9,6 +9,7 @@ import service.*;
 import spark.*;
 import model.UserData;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -90,7 +91,7 @@ public class Server {
 
         return res.body();
     }
-    private Object logoutHandler(Request req, Response res) throws DataAccessException {
+    private Object logoutHandler(Request req, Response res) throws DataAccessException, SQLException {
         String authToken = req.headers("authorization");
         logoutService.logoutRequest(authToken);
         //res.status(200);

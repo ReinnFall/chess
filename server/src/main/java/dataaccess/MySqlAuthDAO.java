@@ -39,27 +39,35 @@ public class MySqlAuthDAO implements AuthDAO{
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
-        try (var connection = DatabaseManager.getConnection()){
+        try (var connection = DatabaseManager.getConnection()) {
             var statement = "SELECT authToken, username FROM AuthData WHERE authToken = ?";
-            try(PreparedStatement stmt = connection.prepareStatement(statement)){
-                stmt.setString(1,token);
-                try(var resultStatement = stmt.executeQuery()){
-                    if (resultStatement.next()){
+            try (PreparedStatement stmt = connection.prepareStatement(statement)) {
+                stmt.setString(1, token);
+                try (var resultStatement = stmt.executeQuery()) {
+                    if (resultStatement.next()) {
                         String tokenFromDB = resultStatement.getString("authToken");
                         String usernameFromDB = resultStatement.getString("username");
-                        return new AuthData(tokenFromDB,usernameFromDB);
+                        return new AuthData(tokenFromDB, usernameFromDB);
                     }
                 }
             }
-        } catch (DataAccessException | SQLException ex) {
-            throw new DataAccessException(500, "Could not find auth data");
+        }catch (DataAccessException | SQLException ex) {
+                throw new DataAccessException(500, "Could not find auth data");
         }
-        return null; // Returning null here will signal that the AuthData isn't in DB
+            return null; // Returning null here will signal that the AuthData isn't in DB
     }
 
     @Override
-    public void deleteAuth(AuthData data) throws DataAccessException {
-
+    public void deleteAuth(AuthData data) throws DataAccessException, SQLException {
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "DELETE FROM AuthData WHERE authToken = ?";
+            try (PreparedStatement stmt = connection.prepareStatement(statement)) {
+                stmt.setString(1, data.authToken());
+                stmt.executeUpdate();
+            }
+        }catch (DataAccessException | SQLException ex){
+            throw new DataAccessException(500, "Error clearing auth data");
+        }
     }
 
     @Override

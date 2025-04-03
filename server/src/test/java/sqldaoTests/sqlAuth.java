@@ -3,6 +3,7 @@ package sqldaoTests;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,12 @@ public class sqlAuth {
         authDAO.clearAuthData();
 
         userDAO = new MySqlUserDAO();
+        userDAO.clearUserData();
+    }
+
+    @AfterEach
+    public void takeDown() throws DataAccessException{
+        authDAO.clearAuthData();
         userDAO.clearUserData();
     }
 

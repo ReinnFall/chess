@@ -4,6 +4,7 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.MySqlUserDAO;
 import model.UserData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,10 @@ public class sqlUser {
     @BeforeEach
     public void setUp() throws DataAccessException {
         userDAO = new MySqlUserDAO();
+        userDAO.clearUserData();
+    }
+    @AfterEach
+    public void takeDown() throws DataAccessException {
         userDAO.clearUserData();
     }
 

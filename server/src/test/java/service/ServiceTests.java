@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -87,7 +88,7 @@ class ServiceTests {
         });
     }
     @Test
-    public void logoutSuccessfullyDeletesAuthData() throws DataAccessException{
+    public void logoutSuccessfullyDeletesAuthData() throws DataAccessException, SQLException {
         registerService.registerRequest(userInput);
         AuthData authData = logoutService.getAuthData("James");
         logoutService.logoutRequest(authData.authToken());
