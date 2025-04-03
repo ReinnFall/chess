@@ -1,6 +1,5 @@
-package sequeltests;
+package dataaccess;
 
-import dataaccess.*;
 import model.GameData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
