@@ -6,7 +6,7 @@ import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public interface GameDAO{
-    public void clearGameData();
+    public void clearGameData() throws DataAccessException;
     public int createGame(String gameName) throws DataAccessException;
     public Collection<GameData> listGames();
     public GameData getGame(int id) throws DataAccessException;

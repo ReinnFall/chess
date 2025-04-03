@@ -1,7 +1,12 @@
 package dataaccess;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
 import model.GameData;
+import org.mindrot.jbcrypt.BCrypt;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,15 +29,47 @@ public class MySqlGameDAO implements GameDAO{
     public MySqlGameDAO() throws DataAccessException{
         ConfigureDatabase.configureDatabase(createStatements);
     }
+    public String serializer(ChessGame gameJava){
+        return new Gson().toJson(gameJava);
+    }
 
     @Override
-    public void clearGameData() {
-
+    public void clearGameData() throws DataAccessException {
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "DELETE FROM GameData";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.executeUpdate();
+            }
+        } catch (DataAccessException | SQLException ex){
+            throw new DataAccessException(500, "Error clearing game data");
+        }
     }
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        return 0;
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "INSERT INTO GameData (gameName, whiteUsername, blackUsername, game) VALUES (?, ?, ?, ?)";
+            ChessGame newGame = new ChessGame();
+            String serializedGame = serializer(newGame);
+
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setString(1, gameName);
+                stmt.setString(2,null);
+                stmt.setString(3,null);
+                stmt.setString(4,serializedGame);
+                stmt.executeUpdate();
+
+                try(var indexes = stmt.getGeneratedKeys()){
+                    if(indexes.next()){
+                        return indexes.getInt(1);
+                    } else{
+                        throw new DataAccessException(500, "Error getting id");
+                    }
+                }
+            }
+        } catch (DataAccessException | SQLException ex){
+            throw new DataAccessException(500, "Could not create game");
+        }
     }
 
     @Override

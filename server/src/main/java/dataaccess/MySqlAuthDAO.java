@@ -84,7 +84,7 @@ public class MySqlAuthDAO implements AuthDAO{
 
     @Override
     public AuthData getAuthByUsername(String username) {
-        return null;
+        return null; // not necessary for db
     }
 
 }
