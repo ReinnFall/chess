@@ -1,6 +1,10 @@
 package dataaccess;
 
 import model.AuthData;
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class MySqlAuthDAO implements AuthDAO{
 
@@ -20,7 +24,19 @@ public class MySqlAuthDAO implements AuthDAO{
 
     @Override
     public void createAuth(AuthData data) throws DataAccessException {
-
+//        if (data.authToken() == null || data.username() == null){
+//            throw new DataAccessException(401,"Error: Invalid user input");
+//        }
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "INSERT INTO AuthData (authToken, username) VALUES (?, ?)";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setString(1,data.authToken());
+                stmt.setString(2, data.username());
+                stmt.executeUpdate();
+            }
+        } catch (DataAccessException | SQLException ex){
+            throw new DataAccessException(500, "Could not create AuthData");
+        }
     }
 
     @Override
