@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
+import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
@@ -38,7 +39,22 @@ public class MySqlAuthDAO implements AuthDAO{
 
     @Override
     public AuthData getAuth(String token) throws DataAccessException {
-        return null;
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "SELECT authToken, username FROM AuthData WHERE authToken = ?";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setString(1,token);
+                try(var resultStatement = stmt.executeQuery()){
+                    if (resultStatement.next()){
+                        String tokenFromDB = resultStatement.getString("authToken");
+                        String usernameFromDB = resultStatement.getString("username");
+                        return new AuthData(tokenFromDB,usernameFromDB);
+                    }
+                }
+            }
+        } catch (DataAccessException | SQLException ex) {
+            throw new DataAccessException(500, "Could not find auth data");
+        }
+        return null; // Returning null here will signal that the AuthData isn't in DB
     }
 
     @Override

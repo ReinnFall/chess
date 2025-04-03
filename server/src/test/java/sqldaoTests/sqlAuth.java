@@ -47,11 +47,46 @@ public class sqlAuth {
         }
     }
     @Test
-    public void createAuthNegative() throws DataAccessException{
+    public void createAuthNegative(){
         AuthData data = new AuthData("token","James");
         //throws an error if user isn't in UserData
         DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
             authDAO.createAuth(data);
         });
+    }
+    @Test
+    public void getAuthPositive() throws DataAccessException {
+        UserData person = new UserData("James", "Stock","js@mail" );
+        userDAO.createUser(person);
+
+        AuthData data = new AuthData("token","James");
+        authDAO.createAuth(data);
+
+        AuthData actual = authDAO.getAuth("token");
+        assertEquals(data.authToken(),actual.authToken());
+        assertEquals(data.username(),actual.username());
+    }
+
+    @Test
+    public void getAuthNegative() throws DataAccessException {
+        UserData person = new UserData("James", "Stock", "js@mail");
+        userDAO.createUser(person);
+
+        AuthData data = new AuthData("token", "James");
+        authDAO.createAuth(data);
+
+        String badToken = "151";
+        AuthData result =  authDAO.getAuth(badToken);
+        assertNull(result); // null means there was no AuthData by the token given
+    }
+    @Test
+    public void clearAuthPositive() throws DataAccessException{
+        UserData person = new UserData("James", "Stock","js@mail" );
+        userDAO.createUser(person);
+
+        AuthData data = new AuthData("token","James");
+        authDAO.createAuth(data);
+
+        authDAO.clearAuthData();
     }
 }
