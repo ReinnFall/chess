@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,5 +68,19 @@ public class sqlGame {
     public void getGameNegative() throws DataAccessException, SQLException {
         GameData data = gameDAO.getGame(30000);
         assertNull(data);
+    }
+    @Test
+    public void listGamesPositive() throws DataAccessException{
+        gameDAO.createGame("Losers");
+        gameDAO.createGame(("Winners"));
+
+        Collection<GameData> actualCollection = new HashSet<>();
+        actualCollection = gameDAO.listGames();
+        assertEquals(actualCollection.size(),2);
+    }
+    @Test
+    public void listGamesNegative() throws DataAccessException{
+        Collection<GameData> actualCollection = gameDAO.listGames();
+        assertEquals(actualCollection.size(),0);
     }
 }

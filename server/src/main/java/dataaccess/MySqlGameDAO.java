@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class MySqlGameDAO implements GameDAO{
@@ -76,8 +77,30 @@ public class MySqlGameDAO implements GameDAO{
         }
     }
     @Override
-    public Collection<GameData> listGames() {
-        return List.of();
+    public Collection<GameData> listGames() throws DataAccessException {
+        Collection<GameData> tempCollection = new HashSet<>();
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "SELECT gameID, gameName, whiteUsername, blackUsername, `game`" +
+                    "FROM GameData";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                try(var resultStatement = stmt.executeQuery()){
+                    while(resultStatement.next()){
+                        int gameID = resultStatement.getInt("gameID");
+                        String gameName = resultStatement.getString("gameName");
+                        String whiteUsername = resultStatement.getString("whiteUsername");
+                        String blackUsername = resultStatement.getString("blackUsername");
+                        String gameJson = resultStatement.getString("game");
+
+                        ChessGame chessGameFromDB = deserialzer(gameJson);
+                        GameData oneGame = new GameData(gameID,whiteUsername,blackUsername,gameName,chessGameFromDB);
+                        tempCollection.add(oneGame);
+                    }
+                }
+            }
+        } catch (SQLException | DataAccessException ex){
+            throw new DataAccessException(500,"Failed to list games");
+        }
+        return tempCollection;
     }
 
     @Override
