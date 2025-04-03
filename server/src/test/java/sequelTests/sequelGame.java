@@ -1,9 +1,7 @@
-package sqldaoTests;
+package sequelTests;
 
 import dataaccess.*;
-import model.AuthData;
 import model.GameData;
-import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +14,7 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class sqlGame {
+public class sequelGame {
     private MySqlGameDAO gameDAO;
 
     @BeforeEach

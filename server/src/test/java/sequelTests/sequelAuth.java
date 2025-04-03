@@ -1,4 +1,4 @@
-package sqldaoTests;
+package sequelTests;
 
 import dataaccess.*;
 import model.AuthData;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class sqlAuth {
+public class sequelAuth {
     private MySqlAuthDAO authDAO;
     private MySqlUserDAO userDAO;
 
