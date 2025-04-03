@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -98,5 +99,23 @@ public class sqlAuth {
 
         AuthData result = authDAO.getAuth("James");
         assertNull(result); // null means there was no AuthData by the token given
+    }
+    @Test
+    public void deleteAuthPositive() throws DataAccessException, SQLException {
+        UserData person = new UserData("James", "Stock","js@mail" );
+        userDAO.createUser(person);
+
+        AuthData data = new AuthData("token","James");
+        authDAO.createAuth(data);
+
+        authDAO.deleteAuth(data);
+
+        AuthData result = authDAO.getAuth("James");
+        assertNull(result); // null means there was no AuthData by the token given
+    }
+    @Test
+    public void deleteAuthNegative() throws DataAccessException, SQLException {
+        AuthData data = new AuthData("token","James");
+        authDAO.deleteAuth(data); //No issues if it tries to delete a token that isn't there
     }
 }
