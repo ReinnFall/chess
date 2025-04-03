@@ -7,6 +7,8 @@ import model.AuthData;
 import model.GameData;
 import model.JoinGameData;
 
+import java.sql.SQLException;
+
 public class JoinGameService{
     private AuthDAO authDAO;
     private GameDAO gameDAO;
@@ -15,7 +17,7 @@ public class JoinGameService{
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
     }
-    public void joinGameRequest(JoinGameData joinGameData, String token) throws DataAccessException{
+    public void joinGameRequest(JoinGameData joinGameData, String token) throws DataAccessException, SQLException {
         AuthData authFromMemory = authDAO.getAuth(token);
         if(authFromMemory == null){
             throw new DataAccessException(401,"Error: unauthorized");

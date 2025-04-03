@@ -157,7 +157,7 @@ class ServiceTests {
         });
     }
     @Test
-    public void joinGameSuccessfullyAddsUser() throws DataAccessException{
+    public void joinGameSuccessfullyAddsUser() throws DataAccessException, SQLException {
         registerService.registerRequest(userInput);
         AuthData authData = createGameService.getAuthData(userInput.username());
         createGameService.createGameRequest(gameData,authData.authToken());

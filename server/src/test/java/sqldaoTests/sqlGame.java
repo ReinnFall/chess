@@ -2,6 +2,7 @@ package sqldaoTests;
 
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -52,5 +53,18 @@ public class sqlGame {
         DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
             gameDAO.createGame(gameName);
         });
+    }
+    @Test
+    public void getGamePositive() throws DataAccessException, SQLException {
+        String gameName = "Losers";
+        int gameID = gameDAO.createGame(gameName);
+
+        GameData data = gameDAO.getGame(gameID);
+        assertEquals("Losers",data.gameName());
+    }
+    @Test
+    public void getGameNegative() throws DataAccessException, SQLException {
+        GameData data = gameDAO.getGame(30000);
+        assertNull(data);
     }
 }

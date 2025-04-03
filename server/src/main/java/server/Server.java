@@ -123,7 +123,7 @@ public class Server {
 
         return res.body();
     }
-    private Object joinGameHandler(Request req, Response res) throws DataAccessException{
+    private Object joinGameHandler(Request req, Response res) throws DataAccessException, SQLException {
         String authToken = req.headers("authorization");
         JoinGameData playerColorAndID = new Gson().fromJson(req.body(), JoinGameData.class);
 

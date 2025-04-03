@@ -33,6 +33,9 @@ public class MySqlGameDAO implements GameDAO{
     public String serializer(ChessGame gameJava){
         return new Gson().toJson(gameJava);
     }
+    public ChessGame deserialzer(String json){
+        return new Gson().fromJson(json,ChessGame.class);
+    }
 
     @Override
     public void clearGameData() throws DataAccessException {
@@ -78,10 +81,29 @@ public class MySqlGameDAO implements GameDAO{
     }
 
     @Override
-    public GameData getGame(int id) throws DataAccessException {
+    public GameData getGame(int id) throws DataAccessException, SQLException {
+        try (var connection = DatabaseManager.getConnection()){
+            var statement = "SELECT gameID, gameName, whiteUsername, blackUsername, `game`" +
+                    "FROM GameData WHERE gameID = ?";
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setInt(1,id);
+                try(var resultStatement = stmt.executeQuery()){
+                    if(resultStatement.next()){
+                        String gameName = resultStatement.getString("gameName");
+                        String whiteUsername = resultStatement.getString("whiteUsername");
+                        String blackUsername = resultStatement.getString("blackUsername");
+                        String gameJson = resultStatement.getString("game");
+
+                        ChessGame chessGameFromDB = deserialzer(gameJson);
+                        return new GameData(id,whiteUsername,blackUsername,gameName,chessGameFromDB);
+                    }
+                }
+            }
+        } catch (SQLException ex){
+            throw new DataAccessException(500,"Failed to get game");
+        }
         return null;
     }
-
     @Override
     public void updateGame(GameData gameData, String playerColor, String username) throws DataAccessException {
 
