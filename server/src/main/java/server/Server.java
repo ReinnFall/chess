@@ -81,7 +81,6 @@ public class Server {
             res.body(new Gson().toJson(loginResult));
 
             return res.body();
-
     }
     private Object registerHandler(Request req, Response res) throws DataAccessException {
         UserData userRegisterInfo = new Gson().fromJson(req.body(),UserData.class);
