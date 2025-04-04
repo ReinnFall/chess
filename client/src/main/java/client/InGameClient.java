@@ -11,4 +11,10 @@ public class InGameClient implements ClientState{
     public String help() {
         return "";
     }
+
+    @Override
+    public String printPrompt() {
+
+        return null;
+    }
 }

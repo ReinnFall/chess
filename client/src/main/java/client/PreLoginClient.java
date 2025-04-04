@@ -57,11 +57,22 @@ public class PreLoginClient implements ClientState{
             throw new ResponseException(401, "Bad input - try again");
         }
         UserData userData = new UserData(params[0],params[1],params[2]);
-        AuthData authData = server.register(userData);
-        return "Successfully registered";
+        AuthData authData = server.register(userData); //Do I need this data in my client
+        state = State.SIGNEDIN;
+        return "register";
     }
     public String quit(){
         return "quit";
+    }
+
+    public String printPrompt() {
+        String status;
+        if(state == State.SIGNEDOUT){
+            status = "[LOGGED OUT] ";
+        } else{
+            status = "[LOGGED IN] ";
+        }
+         return ("\n" + status + ">>> " );
     }
 
 }
