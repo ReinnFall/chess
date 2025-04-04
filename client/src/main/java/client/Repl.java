@@ -4,12 +4,12 @@ import java.util.Scanner;
 
 public class Repl{
     private ClientState client;
-    private String serverUrl;
+    private ServerFacade server;
 
 
     public Repl(String serverUrl){
-        client = new PreLoginClient(serverUrl);
-        this.serverUrl = serverUrl;
+        server = new ServerFacade(serverUrl);
+        client = new PreLoginClient(server);
     }
 
     public void run() {
@@ -29,14 +29,20 @@ public class Repl{
                         System.out.println("Exited");
                         return;
                     case "register":
-                        client = new PostLoginClient(serverUrl);
+                        client = new PostLoginClient(server);
                         //System.out.println(result);
+                        System.out.print("Successfully Logged In");
+                        System.out.print(client.printPrompt());
+                        break;
+                    case "logout":
+                        client = new PreLoginClient(server);
                         System.out.print("Successfully Logged In");
                         System.out.print(client.printPrompt());
                         break;
                     default:
                         System.out.print(result);
                         System.out.print(client.printPrompt());
+
                 }
             } catch (Throwable e) {
                 var msg = e.toString();

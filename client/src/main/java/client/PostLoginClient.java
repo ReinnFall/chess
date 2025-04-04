@@ -6,12 +6,10 @@ import java.util.Arrays;
 
 public class PostLoginClient implements ClientState{
     private final ServerFacade server;
-    private final String serverUrl;
     private State state = State.SIGNEDIN;
 
-    public PostLoginClient(String serverUrl)  {
-        server = new ServerFacade(serverUrl);
-        this.serverUrl = serverUrl;
+    public PostLoginClient(ServerFacade server)  {
+        this.server = server;
     }
 
     @Override
@@ -25,7 +23,7 @@ public class PostLoginClient implements ClientState{
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "help" -> help();
-                case "logout" -> logout(params);
+                case "logout" -> logout();
                 case "create game" -> createGame(params);
                 case "list games" -> listGames();
                 case "play game" -> playGame();
@@ -53,8 +51,9 @@ public class PostLoginClient implements ClientState{
         return "";
     }
 
-    private String logout(String[] params) throws  ResponseException {
-        return "";
+    private String logout() throws  ResponseException {
+        server.logout();
+        return "logout";
     }
 
     @Override

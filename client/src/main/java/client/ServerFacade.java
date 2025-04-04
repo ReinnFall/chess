@@ -23,7 +23,12 @@ public class ServerFacade{
 
     public AuthData register(UserData data) throws ResponseException {
         AuthData authData = makeRequest("POST","/user", data,AuthData.class,null);
+        authToken = authData.authToken();
         return authData;
+    }
+    public void logout() throws ResponseException {
+        makeRequest("DELETE","/session",null,null,authToken);
+        authToken = null; // Clear authToken
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {

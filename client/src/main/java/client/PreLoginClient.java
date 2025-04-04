@@ -8,12 +8,10 @@ import java.util.Arrays;
 
 public class PreLoginClient implements ClientState{
     private final ServerFacade server;
-    private final String serverUrl;
     private State state = State.SIGNEDOUT;
 
-    public PreLoginClient(String serverUrl)  {
-        server = new ServerFacade(serverUrl);
-        this.serverUrl = serverUrl;
+    public PreLoginClient(ServerFacade server)  {
+        this.server = server;
     }
     public String eval(String input) {
         try {
