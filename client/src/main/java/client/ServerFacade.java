@@ -20,7 +20,11 @@ public class ServerFacade{
     public ServerFacade(String url) {
         serverUrl = url;
     }
-
+    public AuthData login(UserData data) throws ResponseException{
+        AuthData authData = makeRequest("POST","/session", data,AuthData.class,null);
+        authToken = authData.authToken();
+        return authData;
+    }
     public AuthData register(UserData data) throws ResponseException {
         AuthData authData = makeRequest("POST","/user", data,AuthData.class,null);
         authToken = authData.authToken();

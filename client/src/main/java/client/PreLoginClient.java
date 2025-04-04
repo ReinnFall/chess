@@ -42,13 +42,14 @@ public class PreLoginClient implements ClientState{
         """;
     }
     public String login(String... params) throws ResponseException {
-        if (params.length != 3){
+        if (params.length != 2){
             throw new ResponseException(401,"Bad input - try again");
         }
-        // Transition to PostLoginClient
-        //server.login(params[0],params[1],params[2]);
+
+        UserData userData = new UserData(params[0],params[1],null);
+        server.login(userData);
         state = State.SIGNEDIN;
-        return "Successfully logged in";
+        return "logged in";
     }
     public String register(String... params) throws ResponseException {
         if (params.length != 3) {
@@ -57,7 +58,7 @@ public class PreLoginClient implements ClientState{
         UserData userData = new UserData(params[0],params[1],params[2]);
         AuthData authData = server.register(userData); //Do I need this data in my client
         state = State.SIGNEDIN;
-        return "register";
+        return "logged in";
     }
     public String quit(){
         return "quit";

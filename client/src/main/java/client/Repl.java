@@ -28,7 +28,7 @@ public class Repl{
                     case "quit":
                         System.out.println("Exited");
                         return;
-                    case "register":
+                    case "logged in":
                         client = new PostLoginClient(server);
                         //System.out.println(result);
                         System.out.print("Successfully Logged In");
