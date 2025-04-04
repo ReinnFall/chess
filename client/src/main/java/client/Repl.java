@@ -36,7 +36,7 @@ public class Repl{
                         break;
                     case "logout":
                         client = new PreLoginClient(server);
-                        System.out.print("Successfully Logged In");
+                        System.out.print("Successfully Logged Out");
                         System.out.print(client.printPrompt());
                         break;
                     default:
