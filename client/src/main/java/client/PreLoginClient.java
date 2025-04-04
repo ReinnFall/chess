@@ -1,6 +1,8 @@
 package client;
 
 import exception.ResponseException;
+import model.AuthData;
+import model.UserData;
 
 import java.util.Arrays;
 
@@ -22,10 +24,10 @@ public class PreLoginClient implements ClientState{
             // Stores everything after cmd into an array
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "Help" -> help();
-                case "Login" -> login(params);
-                case "Register" -> register(params);
-                case "quit" -> "quit";
+                case "help" -> help();
+                case "login" -> login(params);
+                case "register" -> register(params);
+                case "quit" -> quit();
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -33,7 +35,13 @@ public class PreLoginClient implements ClientState{
         }
     }
     public String help(){
-        return "All text needed for help";
+        return """
+        Options:
+        Login as an existing user:  "login" <USERNAME> <PASSWORD>
+        Register as a new user:     "register" <USERNAME> <PASSWORD> <EMAIL>
+        Exit the program:           "quit"
+        Print this message:         "help"
+        """;
     }
     public String login(String... params) throws ResponseException {
         if (params.length != 3){
@@ -48,8 +56,12 @@ public class PreLoginClient implements ClientState{
         if (params.length != 3) {
             throw new ResponseException(401, "Bad input - try again");
         }
+        UserData userData = new UserData(params[0],params[1],params[2]);
+        AuthData authData = server.register(userData);
         return "Successfully registered";
     }
-
+    public String quit(){
+        return "quit";
+    }
 
 }

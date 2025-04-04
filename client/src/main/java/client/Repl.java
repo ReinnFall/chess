@@ -11,7 +11,7 @@ public class Repl{
     }
 
     public void run() {
-        System.out.println("\uD83D\uDC36 Welcome to Chess. Sign in to start.");
+        System.out.println("\uD83D\uDC36 Welcome to Chess. Sign in to start.\n");
         System.out.print(client.help());
 
         Scanner scanner = new Scanner(System.in);
@@ -20,13 +20,15 @@ public class Repl{
             try {
                 String line = scanner.nextLine();
                 result = client.eval(line);
+
                 switch(result){
-                    case "Exit":
+                    case "quit":
                         System.out.println("Exited");
                         return;
-                    case "Register":
+                    case "register":
                         client = new PostLoginClient();
                         System.out.println(result);
+                        break;
                     default:
                         System.out.print(result);
                 }

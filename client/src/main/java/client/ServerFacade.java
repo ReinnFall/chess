@@ -2,6 +2,8 @@ package client;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import model.AuthData;
+import model.UserData;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +15,18 @@ import java.net.URL;
 
 public class ServerFacade{
     private final String serverUrl;
+    private String authToken;
 
     public ServerFacade(String url) {
         serverUrl = url;
     }
 
-    //public
+    public AuthData register(UserData data) throws ResponseException {
+        AuthData authData = makeRequest("POST","/user", data,AuthData.class,null);
+        return authData;
+    }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -28,6 +34,9 @@ public class ServerFacade{
             http.setDoOutput(true);
 
             writeBody(request, http);
+            if (token != null){
+                http.setRequestProperty("Authorization",token);
+            }
             http.connect();
             throwIfNotSuccessful(http);
 
