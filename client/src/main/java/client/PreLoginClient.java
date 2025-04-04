@@ -4,12 +4,12 @@ import exception.ResponseException;
 
 import java.util.Arrays;
 
-public class PreLoginClient{
+public class PreLoginClient implements ClientState{
     private final ServerFacade server;
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
 
-    public PreLoginClient(String serverUrl) {
+    public PreLoginClient(String serverUrl)  {
         server = new ServerFacade(serverUrl);
         this.serverUrl = serverUrl;
     }
