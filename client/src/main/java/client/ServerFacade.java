@@ -2,10 +2,7 @@ package client;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
-import model.AuthData;
-import model.CreateGameData;
-import model.GameData;
-import model.UserData;
+import model.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +11,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public class ServerFacade{
@@ -41,6 +39,10 @@ public class ServerFacade{
         CreateGameData onlyIDData = makeRequest("POST","/game",gameData, CreateGameData.class,authToken);
         int gameID = onlyIDData.gameID();
         return gameID;
+    }
+    public List<GameData> listGames() throws ResponseException{
+        ListGameData games = makeRequest("GET","/game",null, ListGameData.class,authToken);
+        return games.allGames();
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {

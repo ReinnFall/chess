@@ -4,6 +4,7 @@ import exception.ResponseException;
 import model.GameData;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class PostLoginClient implements ClientState{
     private final ServerFacade server;
@@ -44,8 +45,39 @@ public class PostLoginClient implements ClientState{
         return "";
     }
 
-    private String listGames() {
-        return "";
+    private String listGames() throws ResponseException {
+        List<GameData> allGames = server.listGames();
+        if (allGames.isEmpty()){
+            return "No games found.";
+        }
+        StringBuilder combinedString = new StringBuilder();
+        int startingID = 1;
+
+        for (GameData game: allGames){
+            //Game Number
+            combinedString.append(startingID);
+            startingID++;
+            //Game Name
+            combinedString.append(". Game name : ");
+            combinedString.append(game.gameName());
+            //White Player
+            combinedString.append("\t" + "White: ");
+            if(game.whiteUsername() == null){
+                combinedString.append("empty");
+            }else{
+                combinedString.append(game.whiteUsername());
+            }
+            //Black Player
+            combinedString.append("\t" + "Black: ");
+            if(game.blackUsername() == null){
+                combinedString.append("empty");
+            }else{
+                combinedString.append(game.whiteUsername());
+            }
+            combinedString.append("\n");
+        }
+
+        return combinedString.toString();
     }
 
     private String createGame(String... params) throws ResponseException {
