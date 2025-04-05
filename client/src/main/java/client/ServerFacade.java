@@ -3,6 +3,8 @@ package client;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.AuthData;
+import model.CreateGameData;
+import model.GameData;
 import model.UserData;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 
 public class ServerFacade{
     private final String serverUrl;
@@ -21,18 +24,23 @@ public class ServerFacade{
         serverUrl = url;
     }
     public AuthData login(UserData data) throws ResponseException{
-        AuthData authData = makeRequest("POST","/session", data,AuthData.class,null);
+        AuthData authData = makeRequest("POST","/session", data, AuthData.class,null);
         authToken = authData.authToken();
         return authData;
     }
     public AuthData register(UserData data) throws ResponseException {
-        AuthData authData = makeRequest("POST","/user", data,AuthData.class,null);
+        AuthData authData = makeRequest("POST","/user", data, AuthData.class,null);
         authToken = authData.authToken();
         return authData;
     }
     public void logout() throws ResponseException {
         makeRequest("DELETE","/session",null,null,authToken);
         authToken = null; // Clear authToken
+    }
+    public int createGame(GameData gameData) throws ResponseException{
+        CreateGameData onlyIDData = makeRequest("POST","/game",gameData, CreateGameData.class,authToken);
+        int gameID = onlyIDData.gameID();
+        return gameID;
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
@@ -42,10 +50,11 @@ public class ServerFacade{
             http.setRequestMethod(method);
             http.setDoOutput(true);
 
-            writeBody(request, http);
+
             if (token != null){
                 http.setRequestProperty("Authorization",token);
             }
+            writeBody(request, http);
             http.connect();
             throwIfNotSuccessful(http);
 

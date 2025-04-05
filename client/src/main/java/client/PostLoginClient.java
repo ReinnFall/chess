@@ -1,6 +1,7 @@
 package client;
 
 import exception.ResponseException;
+import model.GameData;
 
 import java.util.Arrays;
 
@@ -24,10 +25,10 @@ public class PostLoginClient implements ClientState{
             return switch (cmd) {
                 case "help" -> help();
                 case "logout" -> logout();
-                case "create game" -> createGame(params);
-                case "list games" -> listGames();
-                case "play game" -> playGame();
-                case "observe game" -> observGame();
+                case "create" -> createGame(params);
+                case "list" -> listGames();
+                case "play" -> playGame();
+                case "watch" -> observGame();
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -47,8 +48,16 @@ public class PostLoginClient implements ClientState{
         return "";
     }
 
-    private String createGame(String[] params) {
-        return "";
+    private String createGame(String... params) throws ResponseException {
+        if (params.length != 1){
+            throw new ResponseException(400, "Invalid input");
+        }
+        String gameName = params[0];
+        GameData gameData = new GameData(0,null,null,gameName,null);
+
+        int gameID = server.createGame(gameData);
+
+        return "Successfully created game " + gameName;
     }
 
     private String logout() throws  ResponseException {
@@ -58,7 +67,14 @@ public class PostLoginClient implements ClientState{
 
     @Override
     public String help() {
-        return "hello world";
+        return """
+        Options:
+        List current games: "list"
+        Create a new game:  "create" <GAME NAME>
+        Join a game:        "join" <GAME ID> <COLOR>
+        Watch a game:       "watch" <GAME ID>
+        Logout:             "logout"
+        """;
     }
 
     @Override
