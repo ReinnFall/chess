@@ -42,7 +42,7 @@ public class ServerFacade{
     }
     public List<GameData> listGames() throws ResponseException{
         ListGameData games = makeRequest("GET","/game",null, ListGameData.class,authToken);
-        return games.allGames();
+        return games.games();
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {

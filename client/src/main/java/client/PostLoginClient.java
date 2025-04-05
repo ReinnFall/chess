@@ -47,7 +47,7 @@ public class PostLoginClient implements ClientState{
 
     private String listGames() throws ResponseException {
         List<GameData> allGames = server.listGames();
-        if (allGames.isEmpty()){
+        if (allGames == null){
             return "No games found.";
         }
         StringBuilder combinedString = new StringBuilder();
