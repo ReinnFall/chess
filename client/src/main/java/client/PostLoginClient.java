@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import exception.ResponseException;
 import model.GameData;
 
@@ -12,6 +13,7 @@ public class PostLoginClient implements ClientState{
     private final ServerFacade server;
     private State state = State.SIGNEDIN;
     private List<GameData> storedGames = new ArrayList<>();
+    private TerminalChessBoard chessboard = new TerminalChessBoard();
 
     public PostLoginClient(ServerFacade server)  {
         this.server = server;
@@ -66,7 +68,17 @@ public class PostLoginClient implements ClientState{
             requestedTeamColor = requestedTeamColor.toUpperCase();
             server.joinGame(trueGameID, requestedTeamColor);
 
-            return "Print out chessboard";
+            ChessGame currentChessGame = selectedGame.game();
+            ChessGame.TeamColor playerTeam;
+            if(requestedTeamColor.equalsIgnoreCase("white")){
+                playerTeam = ChessGame.TeamColor.WHITE;
+            } else{
+                playerTeam = ChessGame.TeamColor.BLACK;
+            }
+
+            chessboard.printChessBoard(currentChessGame,playerTeam);
+
+            return "Here's the board";
         } catch (ResponseException ex){
             return "Unable to join the game";
         }
