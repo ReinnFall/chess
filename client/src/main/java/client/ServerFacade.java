@@ -44,6 +44,10 @@ public class ServerFacade{
         ListGameData games = makeRequest("GET","/game",null, ListGameData.class,authToken);
         return games.games();
     }
+    public void joinGame(int gameID,String teamColor) throws ResponseException {
+        JoinGameData data = new JoinGameData( teamColor, gameID);
+        makeRequest("PUT","/game",data,null, authToken);
+    }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
         try {

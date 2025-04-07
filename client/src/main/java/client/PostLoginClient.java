@@ -3,12 +3,15 @@ package client;
 import exception.ResponseException;
 import model.GameData;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PostLoginClient implements ClientState{
     private final ServerFacade server;
     private State state = State.SIGNEDIN;
+    private List<GameData> storedGames = new ArrayList<>();
 
     public PostLoginClient(ServerFacade server)  {
         this.server = server;
@@ -28,8 +31,8 @@ public class PostLoginClient implements ClientState{
                 case "logout" -> logout();
                 case "create" -> createGame(params);
                 case "list" -> listGames();
-                case "play" -> playGame();
-                case "watch" -> observGame();
+                case "join" -> playGame(params);
+                case "watch" -> observeGame();
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -37,16 +40,41 @@ public class PostLoginClient implements ClientState{
         }
     }
 
-    private String observGame() {
+    private String observeGame() {
         return "";
     }
 
-    private String playGame() {
-        return "";
+    private String playGame(String... params) throws ResponseException {
+        if (params.length != 2){
+            return "Invalid input";
+        }
+        try {
+            int requestedGameNumber = Integer.parseInt(params[0]);
+
+            int numberOfGames = storedGames.size();
+            if (requestedGameNumber <= 0 || requestedGameNumber > numberOfGames) {
+                return "Invalid GameId";
+            }
+            String requestedTeamColor = params[1];
+            if (!requestedTeamColor.equalsIgnoreCase("white") && !requestedTeamColor.equalsIgnoreCase("black")) {
+                return "Wrong color. Please use either white or black";
+            }
+            int trueIndex = requestedGameNumber - 1;
+            GameData selectedGame = storedGames.get(trueIndex);
+            int trueGameID = selectedGame.gameID();
+
+            requestedTeamColor = requestedTeamColor.toUpperCase();
+            server.joinGame(trueGameID, requestedTeamColor);
+
+            return "Print out chessboard";
+        } catch (ResponseException ex){
+            return "Unable to join the game";
+        }
     }
 
     private String listGames() throws ResponseException {
         List<GameData> allGames = server.listGames();
+        storedGames = allGames;
         if (allGames == null){
             return "No games found.";
         }
@@ -72,7 +100,7 @@ public class PostLoginClient implements ClientState{
             if(game.blackUsername() == null){
                 combinedString.append("empty");
             }else{
-                combinedString.append(game.whiteUsername());
+                combinedString.append(game.blackUsername());
             }
             combinedString.append("\n");
         }
