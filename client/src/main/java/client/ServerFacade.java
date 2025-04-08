@@ -49,9 +49,6 @@ public class ServerFacade{
         makeRequest("PUT","/game",data,null, authToken);
     }
 
-//    public void clear() throws ResponseException{
-//        makeRequest("DELETE","/db", null,null,null);
-//    }
     //Testing purposes
     public String getAuth(){
         return authToken;
