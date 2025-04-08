@@ -48,6 +48,9 @@ public class ServerFacade{
         JoinGameData data = new JoinGameData( teamColor, gameID);
         makeRequest("PUT","/game",data,null, authToken);
     }
+    public void clear() throws ResponseException{
+        makeRequest("DELETE","/db", null,null,null);
+    }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
         try {
