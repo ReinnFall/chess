@@ -51,6 +51,13 @@ public class ServerFacade{
     public void clear() throws ResponseException{
         makeRequest("DELETE","/db", null,null,null);
     }
+    //Testing purposes
+    public String getAuth(){
+        return authToken;
+    }
+    public void setAuth(String auth){
+        authToken = auth;
+    }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {
         try {

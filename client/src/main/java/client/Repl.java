@@ -13,7 +13,7 @@ public class Repl{
     }
 
     public void run() {
-        System.out.println("\uD83D\uDC36 Welcome to Chess. Sign in to start.\n");
+        System.out.println("Welcome to Chess. Sign in to start.\n");
         System.out.print(client.help());
         System.out.print(client.printPrompt());
 

@@ -133,8 +133,12 @@ public class PostLoginClient implements ClientState{
     }
 
     private String logout() throws  ResponseException {
-        server.logout();
-        return "logout";
+        try{
+            server.logout();
+            return "logout";
+        } catch (ResponseException ex){
+            return "Not authorized";
+        }
     }
 
     @Override

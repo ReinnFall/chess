@@ -7,8 +7,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ServerFacadeTests {
@@ -64,5 +63,23 @@ public class ServerFacadeTests {
             var authData = facade.login(data);
         });
     }
+    @Test
+    void logoutPositive() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        var authData = facade.register(data);
 
+        facade.logout();
+
+        assertNull(facade.getAuth());
+    }
+    @Test
+    void logoutNegative() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        var authData = facade.register(data);
+        facade.setAuth(null);
+
+        ResponseException ex = Assertions.assertThrows(ResponseException.class, () ->{
+            facade.logout();
+        });
+    }
 }
