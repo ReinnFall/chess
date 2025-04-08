@@ -32,8 +32,9 @@ public class TerminalChessBoard{
         }
 
         out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(EMPTY + "  ");
         for (char column : columns){
-            out.print(" " + column + " ");
+            out.print(column + "    ");
         }
         out.print(RESET_BG_COLOR);
         out.println();
@@ -46,11 +47,12 @@ public class TerminalChessBoard{
                 ChessPiece currentPiece = currentBoard.getPiece(currentPosition);
 
                 if(currentPiece == null){
-                    out.print("  ");
+                    out.print(EMPTY);
                 } else{
                     out.print(" " + convertToSymbol(currentPiece) + " ");
                 }
             }
+            out.println();
         }
 
     }
