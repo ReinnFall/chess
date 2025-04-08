@@ -104,6 +104,9 @@ public class ServerFacadeTests {
 
         String gameName = "Losers";
         GameData badData = new GameData(0,null,null,null,null);
-        facade.createGame(badData);
+        ResponseException ex = Assertions.assertThrows(ResponseException.class, () ->{
+            facade.createGame(badData);
+        });
+
     }
 }
