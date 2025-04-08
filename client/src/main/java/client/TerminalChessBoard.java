@@ -40,7 +40,7 @@ public class TerminalChessBoard{
         out.println();
 
         for (int row: rows){
-            out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " " + RESET_BG_COLOR);
+            out.print(SET_BG_COLOR_LIGHT_GREY  + " " + row + " " + RESET_BG_COLOR);
             for(char column: columns){
                 int columnNumber = columnIndexer(column);
                 ChessPosition currentPosition = new ChessPosition(row,columnNumber);
@@ -49,9 +49,10 @@ public class TerminalChessBoard{
                 if(currentPiece == null){
                     out.print(EMPTY);
                 } else{
-                    out.print(" " + convertToSymbol(currentPiece) + " ");
+                    out.print(convertToSymbol(currentPiece));
                 }
             }
+            out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " " + RESET_BG_COLOR);
             out.println();
         }
 
