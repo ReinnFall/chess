@@ -59,7 +59,10 @@ public class ServerFacadeTests {
     }
     @Test
     void loginNegative() throws Exception{
-
+        UserData data = new UserData("James","Stock","js@mail");
+        ResponseException ex = Assertions.assertThrows(ResponseException.class, () ->{
+            var authData = facade.login(data);
+        });
     }
 
 }
