@@ -59,10 +59,15 @@ public class PreLoginClient implements ClientState{
         if (params.length != 3) {
             throw new ResponseException(401, "Bad input - try again");
         }
-        UserData userData = new UserData(params[0],params[1],params[2]);
-        AuthData authData = server.register(userData); //Do I need this data in my client
-        state = State.SIGNEDIN;
-        return "logged in";
+        try{
+            UserData userData = new UserData(params[0],params[1],params[2]);
+            AuthData authData = server.register(userData);
+            state = State.SIGNEDIN;
+            return "logged in";
+        }catch(ResponseException ex){
+            return "Error logging in - User already exists or bad input";
+        }
+
     }
     public String quit(){
         return "quit";

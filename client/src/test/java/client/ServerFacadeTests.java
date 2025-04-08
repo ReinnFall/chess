@@ -3,9 +3,12 @@ package client;
 import dataaccess.DataAccessException;
 import exception.ResponseException;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -81,5 +84,26 @@ public class ServerFacadeTests {
         ResponseException ex = Assertions.assertThrows(ResponseException.class, () ->{
             facade.logout();
         });
+    }
+    @Test
+    void createGamePositive() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        facade.register(data);
+
+        String gameName = "Losers";
+        GameData gameData = new GameData(0,null,null,gameName,null);
+        facade.createGame(gameData);
+
+        List<GameData> games = facade.listGames();
+        assertNotNull(games);
+    }
+    @Test
+    void createGameNegative() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        facade.register(data);
+
+        String gameName = "Losers";
+        GameData badData = new GameData(0,null,null,null,null);
+        facade.createGame(badData);
     }
 }

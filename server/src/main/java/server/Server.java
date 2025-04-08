@@ -83,13 +83,18 @@ public class Server {
             return res.body();
     }
     private Object registerHandler(Request req, Response res) throws DataAccessException {
-        UserData userRegisterInfo = new Gson().fromJson(req.body(),UserData.class);
-        AuthData registerResult = registerService.registerRequest(userRegisterInfo);
+        try{
+            UserData userRegisterInfo = new Gson().fromJson(req.body(),UserData.class);
+            AuthData registerResult = registerService.registerRequest(userRegisterInfo);
 
-        //res.status(200);
-        res.body(new Gson().toJson(registerResult));
+            //res.status(200);
+            res.body(new Gson().toJson(registerResult));
 
-        return res.body();
+            return res.body();
+        } catch (DataAccessException ex){
+            res.status(ex.statusCode());
+            return new Gson().toJson(ex.getMessage());
+        }
     }
     private Object logoutHandler(Request req, Response res) throws DataAccessException, SQLException {
         String authToken = req.headers("authorization");
