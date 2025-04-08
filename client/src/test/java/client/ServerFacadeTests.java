@@ -2,10 +2,12 @@ package client;
 
 import dataaccess.DataAccessException;
 import exception.ResponseException;
+import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -44,6 +46,20 @@ public class ServerFacadeTests {
             var authData = facade.register(badData);
         });
     }
+    @Test
+    void loginPositive() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        var authData = facade.register(data);
 
+        facade.logout();
+        UserData loginData = new UserData("James","Stock",null);
+        AuthData auth = facade.login(loginData);
+
+        assertEquals(data.username(),auth.username());
+    }
+    @Test
+    void loginNegative() throws Exception{
+
+    }
 
 }

@@ -47,9 +47,13 @@ public class PreLoginClient implements ClientState{
         }
 
         UserData userData = new UserData(params[0],params[1],null);
-        server.login(userData);
-        state = State.SIGNEDIN;
-        return "logged in";
+        try{
+            server.login(userData);
+            state = State.SIGNEDIN;
+            return "logged in";
+        }catch (ResponseException ex){
+            return "Invalid username of password";
+        }
     }
     public String register(String... params) throws ResponseException {
         if (params.length != 3) {
