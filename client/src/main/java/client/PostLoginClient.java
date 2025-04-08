@@ -33,8 +33,8 @@ public class PostLoginClient implements ClientState{
                 case "logout" -> logout();
                 case "create" -> createGame(params);
                 case "list" -> listGames();
-                case "join" -> playGame(params);
-                case "watch" -> observeGame();
+                case "join" -> joinGame(params);
+                case "watch" -> watchGame(params);
                 default -> help();
             };
         } catch (ResponseException ex) {
@@ -42,14 +42,32 @@ public class PostLoginClient implements ClientState{
         }
     }
 
-    private String observeGame() {
-        return "";
-    }
-
-    private String playGame(String... params) throws ResponseException {
+    private String watchGame(String... params) {
         if (params.length != 2){
             return "Invalid input";
         }
+        int requestedGameNumber = Integer.parseInt(params[0]);
+
+        int numberOfGames = storedGames.size();
+        if (requestedGameNumber <= 0 || requestedGameNumber > numberOfGames) {
+            return "Invalid GameId";
+        }
+        String requestedTeamColor = params[1];
+        if (!requestedTeamColor.equalsIgnoreCase("white") && !requestedTeamColor.equalsIgnoreCase("black")) {
+            return "Wrong color. Please use either white or black";
+        }
+        int trueIndex = requestedGameNumber - 1;
+        GameData selectedGame = storedGames.get(trueIndex);
+        int trueGameID = selectedGame.gameID();
+
+        return "";
+    }
+
+    private String joinGame(String... params) throws ResponseException {
+        if (params.length != 2){
+            return "Invalid input";
+        }
+
         try {
             int requestedGameNumber = Integer.parseInt(params[0]);
 

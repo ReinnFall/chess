@@ -8,10 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class MySqlGameDAO implements GameDAO{
 
@@ -79,7 +76,7 @@ public class MySqlGameDAO implements GameDAO{
     }
     @Override
     public Collection<GameData> listGames() throws DataAccessException {
-        Collection<GameData> tempCollection = new HashSet<>();
+        Collection<GameData> tempCollection = new ArrayList<>();
         try (var connection = DatabaseManager.getConnection()){
             var statement = "SELECT gameID, gameName, whiteUsername, blackUsername, `game`" +
                     "FROM GameData";

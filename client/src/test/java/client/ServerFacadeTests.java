@@ -127,4 +127,29 @@ public class ServerFacadeTests {
         List<GameData> games = facade.listGames();
         assertTrue(games.isEmpty());
     }
+    @Test
+    void joinGamePositive() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        facade.register(data);
+
+        String gameName = "Losers";
+        GameData gameData = new GameData(0,null,null,gameName,null);
+        int gameId = facade.createGame(gameData);
+
+
+        facade.joinGame(gameId,"WHITE");
+        List<GameData> games = facade.listGames();
+
+        assertEquals("James",games.getFirst().whiteUsername());
+    }
+    @Test
+    void joinGameNegative() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        facade.register(data);
+
+        ResponseException ex = Assertions.assertThrows(ResponseException.class, () ->{
+            facade.joinGame(1,"WHITE");
+        });
+
+    }
 }
