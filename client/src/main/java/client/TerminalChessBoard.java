@@ -49,6 +49,27 @@ public class TerminalChessBoard{
                 ChessPosition currentPosition = new ChessPosition(row,columnNumber);
                 ChessPiece currentPiece = currentBoard.getPiece(currentPosition);
 
+                //Chess Background Color
+                int sumPosition = row + column;
+                boolean isEven = (sumPosition % 2 == 0);
+                boolean isLight;
+
+                if(isEven){
+                    isLight = true;
+                } else{
+                    isLight = false;
+                }
+
+                String backgroundColor;
+
+                if(isLight){
+                    backgroundColor = SET_BG_COLOR_BLUE;
+                } else {
+                    backgroundColor = SET_BG_COLOR_BLACK;
+                }
+                out.print(backgroundColor);
+
+                //Actually print out piece
                 if(currentPiece == null){
                     out.print(EMPTY);
                 } else{
