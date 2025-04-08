@@ -27,7 +27,10 @@ public class ServerFacadeTests {
         String serverUrl = "http://localhost:" + port;
         facade = new ServerFacade(serverUrl);
     }
-
+    @AfterEach
+    void clearData() throws ResponseException {
+        facade.clear();
+    }
     @AfterAll
     static void stopServer() throws ResponseException {
         server.stop();
