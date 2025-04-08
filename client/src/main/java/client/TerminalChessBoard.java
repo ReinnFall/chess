@@ -41,17 +41,7 @@ public class TerminalChessBoard{
         for (int row: rows){
             out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " " + RESET_BG_COLOR);
             for(char column: columns){
-                int columnNumber = switch (column){
-                    case 'a' -> 1;
-                    case 'b' -> 2;
-                    case 'c' -> 3;
-                    case 'd' -> 4;
-                    case 'e' -> 5;
-                    case 'f' -> 6;
-                    case 'g' -> 7;
-                    case 'h' -> 8;
-                    default -> throw new Exception("Internal error");
-                };
+                int columnNumber = columnIndexer(column);
                 ChessPosition currentPosition = new ChessPosition(row,columnNumber);
                 ChessPiece currentPiece = currentBoard.getPiece(currentPosition);
 

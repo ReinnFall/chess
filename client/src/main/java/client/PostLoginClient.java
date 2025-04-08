@@ -79,7 +79,7 @@ public class PostLoginClient implements ClientState{
             chessboard.printChessBoard(currentChessGame,playerTeam);
 
             return "Here's the board";
-        } catch (ResponseException ex){
+        } catch (Exception ex){
             return "Unable to join the game";
         }
     }
