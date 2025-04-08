@@ -30,16 +30,19 @@ public class TerminalChessBoard{
         }else{
             rows = new int[]{1, 2, 3, 4, 5, 6, 7, 8};
         }
-
+        //Top column letters
         out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(EMPTY + "  ");
+        out.print("   ");
         for (char column : columns){
-            out.print(column + "    ");
+            out.print(" " + column + " ");
         }
+        out.print("   ");
         out.print(RESET_BG_COLOR);
         out.println();
 
+        //Piece positions
         for (int row: rows){
+            //Left row numbers
             out.print(SET_BG_COLOR_LIGHT_GREY  + " " + row + " " + RESET_BG_COLOR);
             for(char column: columns){
                 int columnNumber = columnIndexer(column);
@@ -52,10 +55,19 @@ public class TerminalChessBoard{
                     out.print(convertToSymbol(currentPiece));
                 }
             }
+            //Right row numbers
             out.print(SET_BG_COLOR_LIGHT_GREY + " " + row + " " + RESET_BG_COLOR);
             out.println();
         }
-
+        //Botton column letters
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print("   ");
+        for (char column : columns){
+            out.print(" " + column + " ");
+        }
+        out.print("   ");
+        out.print(RESET_BG_COLOR);
+        out.println();
     }
     private int columnIndexer(char columnLetter) throws Exception {
         int columnNumber = 0;
