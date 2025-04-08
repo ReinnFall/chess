@@ -37,30 +37,35 @@ public class PostLoginClient implements ClientState{
                 case "watch" -> watchGame(params);
                 default -> help();
             };
-        } catch (ResponseException ex) {
+        } catch (Exception ex) {
             return ex.getMessage();
         }
     }
 
-    private String watchGame(String... params) {
-        if (params.length != 2){
+    private String watchGame(String... params) throws Exception {
+        if (params.length != 1) {
             return "Invalid input";
         }
-        int requestedGameNumber = Integer.parseInt(params[0]);
+        try {
+            int requestedGameNumber = Integer.parseInt(params[0]);
 
-        int numberOfGames = storedGames.size();
-        if (requestedGameNumber <= 0 || requestedGameNumber > numberOfGames) {
-            return "Invalid GameId";
-        }
-        String requestedTeamColor = params[1];
-        if (!requestedTeamColor.equalsIgnoreCase("white") && !requestedTeamColor.equalsIgnoreCase("black")) {
-            return "Wrong color. Please use either white or black";
-        }
-        int trueIndex = requestedGameNumber - 1;
-        GameData selectedGame = storedGames.get(trueIndex);
-        int trueGameID = selectedGame.gameID();
+            int numberOfGames = storedGames.size();
+            if (requestedGameNumber <= 0 || requestedGameNumber > numberOfGames) {
+                return "Invalid GameId";
+            }
+            int trueIndex = requestedGameNumber - 1;
+            GameData selectedGame = storedGames.get(trueIndex);
+            int trueGameID = selectedGame.gameID();
 
-        return "";
+            ChessGame currentChessGame = selectedGame.game();
+            //default to white view
+            ChessGame.TeamColor playerTeam = ChessGame.TeamColor.WHITE;
+            chessboard.printChessBoard(currentChessGame, playerTeam);
+
+            return "Here's the board";
+        } catch (Exception ex) {
+            return "Unable to watch - check input";
+        }
     }
 
     private String joinGame(String... params) throws ResponseException {
@@ -98,7 +103,7 @@ public class PostLoginClient implements ClientState{
 
             return "Here's the board";
         } catch (Exception ex){
-            return "Unable to join the game";
+            return "Unable to join the game - check input";
         }
     }
 
@@ -168,6 +173,7 @@ public class PostLoginClient implements ClientState{
         Join a game:        "join" <GAME ID> <COLOR>
         Watch a game:       "watch" <GAME ID>
         Logout:             "logout"
+        Help:               "help"
         """;
     }
 

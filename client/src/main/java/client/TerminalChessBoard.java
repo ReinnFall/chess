@@ -51,7 +51,7 @@ public class TerminalChessBoard{
 
                 //Chess Background Color
                 int sumPosition = row + column;
-                boolean isEven = (sumPosition % 2 == 0);
+                boolean isEven = (sumPosition % 2 == 1);
                 boolean isLight;
 
                 if(isEven){
