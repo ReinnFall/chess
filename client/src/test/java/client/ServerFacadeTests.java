@@ -107,6 +107,24 @@ public class ServerFacadeTests {
         ResponseException ex = Assertions.assertThrows(ResponseException.class, () ->{
             facade.createGame(badData);
         });
+    }
+    @Test
+    void listGamesPositive() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        facade.register(data);
 
+        String gameName = "Losers";
+        GameData gameData = new GameData(0,null,null,gameName,null);
+        facade.createGame(gameData);
+
+        assertNotNull(facade.listGames());
+    }
+    @Test
+    void listGamesNegative() throws Exception{
+        UserData data = new UserData("James","Stock","js@mail");
+        facade.register(data);
+
+        List<GameData> games = facade.listGames();
+        assertTrue(games.isEmpty());
     }
 }
