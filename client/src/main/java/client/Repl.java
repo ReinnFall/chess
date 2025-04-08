@@ -39,6 +39,16 @@ public class Repl{
                         System.out.print("Successfully Logged Out");
                         System.out.print(client.printPrompt());
                         break;
+                    case "leave":
+                        client = new PostLoginClient(server);
+                        System.out.print("Successfully Logged Out");
+                        System.out.print(client.printPrompt());
+                        break;
+                    case "into game":
+                        client = new InGameClient(server);
+                        System.out.print("Entered game");
+                        System.out.print(client.printPrompt());
+                        break;
                     default:
                         System.out.print(result);
                         System.out.print(client.printPrompt());

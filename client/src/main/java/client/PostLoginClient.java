@@ -62,7 +62,7 @@ public class PostLoginClient implements ClientState{
             ChessGame.TeamColor playerTeam = ChessGame.TeamColor.WHITE;
             chessboard.printChessBoard(currentChessGame, playerTeam);
 
-            return "Here's the board";
+            return "into game";
         } catch (Exception ex) {
             return "Unable to watch - check input";
         }
@@ -101,7 +101,7 @@ public class PostLoginClient implements ClientState{
 
             chessboard.printChessBoard(currentChessGame,playerTeam);
 
-            return "Here's the board";
+            return "into game";
         } catch (Exception ex){
             return "Unable to join the game - check input";
         }
