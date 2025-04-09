@@ -1,5 +1,6 @@
 package client;
 
+import client.websocket.ServerMessageHandler;
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;

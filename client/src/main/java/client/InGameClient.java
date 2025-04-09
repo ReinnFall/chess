@@ -1,13 +1,28 @@
 package client;
 
+import client.websocket.ServerMessageHandler;
+import client.websocket.WebSocketFacade;
+import exception.ResponseException;
+
 import java.util.Arrays;
 
 public class InGameClient implements ClientState{
     private final ServerFacade server;
     private State state = State.SIGNEDIN;
+    private final ServerMessageHandler messageHandler;
+    private WebSocketFacade ws;
 
-    public InGameClient(ServerFacade server)  {
+    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl)  {
         this.server = server;
+        this.messageHandler = messageHandler;
+        try{
+            ws = new WebSocketFacade(serverUrl,messageHandler);
+            ws.connectToGame();
+
+        } catch(ResponseException ex){
+            System.out.println("Failed to connect to game");
+        }
+
     }
     @Override
     public String eval(String input) {

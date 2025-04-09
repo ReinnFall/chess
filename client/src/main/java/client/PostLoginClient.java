@@ -120,9 +120,11 @@ public class PostLoginClient implements ClientState{
             //Game Number
             combinedString.append(startingID);
             startingID++;
+
             //Game Name
             combinedString.append(". Game name : ");
             combinedString.append(game.gameName());
+
             //White Player
             combinedString.append("\t" + "White: ");
             if(game.whiteUsername() == null){
@@ -130,6 +132,7 @@ public class PostLoginClient implements ClientState{
             }else{
                 combinedString.append(game.whiteUsername());
             }
+
             //Black Player
             combinedString.append("\t" + "Black: ");
             if(game.blackUsername() == null){
