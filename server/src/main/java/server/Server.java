@@ -5,6 +5,7 @@ import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameData;
+import server.websocket.WebSocketHandler;
 import service.*;
 import spark.*;
 import model.UserData;
@@ -22,6 +23,7 @@ public class Server {
     private final CreateGameService createGameService;
     private final ListGameService listGameService;
     private final JoinGameService joinGameService;
+    private final WebSocketHandler webSocketHandler;
     private  UserDAO userDAO; // Potential optimization
     private  AuthDAO authDAO;
     private  GameDAO gameDAO;
@@ -44,12 +46,16 @@ public class Server {
         createGameService = new CreateGameService(authDAO,gameDAO);
         listGameService = new ListGameService(authDAO,gameDAO);
         joinGameService = new JoinGameService(authDAO,gameDAO);
+
+        webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/session", this::loginHandler);

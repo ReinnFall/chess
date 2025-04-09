@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import client.websocket.ServerMessageHandler;
 import client.websocket.WebSocketFacade;
 import exception.ResponseException;
@@ -11,13 +12,17 @@ public class InGameClient implements ClientState{
     private State state = State.SIGNEDIN;
     private final ServerMessageHandler messageHandler;
     private WebSocketFacade ws;
+    private final int gameID;
+    private final ChessGame.TeamColor playerColor;
 
-    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl)  {
+    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl, int gameID, ChessGame.TeamColor playerColor)  {
         this.server = server;
         this.messageHandler = messageHandler;
+        this.gameID = gameID;
+        this.playerColor = playerColor;
         try{
             ws = new WebSocketFacade(serverUrl,messageHandler);
-            ws.connectToGame();
+            ws.connectToGame(server.getAuth(),gameID);
 
         } catch(ResponseException ex){
             System.out.println("Failed to connect to game");

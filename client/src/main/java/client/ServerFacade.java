@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.*;
@@ -17,6 +18,8 @@ import java.util.Map;
 public class ServerFacade{
     private final String serverUrl;
     private String authToken;
+    private int currentGameID;
+    private ChessGame.TeamColor playerColor;
 
     public ServerFacade(String url) {
         serverUrl = url;
@@ -57,6 +60,18 @@ public class ServerFacade{
     }
     public void setAuth(String auth){
         authToken = auth;
+    }
+    public void setGameID(int gameID){
+        currentGameID = gameID;
+    }
+    public int getGameID(){
+        return currentGameID;
+    }
+    public void setPlayerColor(ChessGame.TeamColor playerColor){
+        this.playerColor = playerColor;
+    }
+    public ChessGame.TeamColor getPlayerColor(){
+        return playerColor;
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String token) throws ResponseException {

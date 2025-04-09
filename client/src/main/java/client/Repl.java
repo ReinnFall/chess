@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import client.websocket.ServerMessageHandler;
 import client.websocket.WebSocketFacade;
 import exception.ResponseException;
@@ -54,7 +55,9 @@ public class Repl implements ServerMessageHandler {
                         System.out.print(client.printPrompt());
                         break;
                     case "into game":
-                        client = new InGameClient(server,this,serverUrl);
+                        int gameID = server.getGameID();
+                        ChessGame.TeamColor playerColor = server.getPlayerColor();
+                        client = new InGameClient(server,this,serverUrl,gameID,playerColor);
                         System.out.print("Entered game");
                         System.out.print(client.printPrompt());
                         break;

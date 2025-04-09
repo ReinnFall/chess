@@ -39,9 +39,9 @@ public class WebSocketFacade extends Endpoint {
             throw new ResponseException(500, ex.getMessage());
         }
     }
-    public void connectToGame() throws ResponseException {
+    public void connectToGame(String authToken, int gameID) throws ResponseException {
         try {
-            var action = new UserGameCommand(UserGameCommand.CommandType.CONNECT,"fakeToken",67);
+            var action = new UserGameCommand(UserGameCommand.CommandType.CONNECT,authToken,gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
             throw new ResponseException(500, ex.getMessage());
