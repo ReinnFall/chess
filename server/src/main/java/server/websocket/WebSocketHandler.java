@@ -61,7 +61,7 @@ public class WebSocketHandler {
             //throw and error
             return;
         }
-        connections.add(username,session);
+        connections.add(username,session,gameID);
 
         LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
         session.getRemote().sendString(new Gson().toJson(loadGameMessage));
@@ -77,7 +77,7 @@ public class WebSocketHandler {
 
         String joinOrWatchMessage = username + " entered the game as " + position;
         NotificationMessage notificationMessage = new NotificationMessage(joinOrWatchMessage);
-        connections.broadcast(username,notificationMessage);
+        connections.broadcast(username,notificationMessage,gameID);
     }
     private void makeMOVE(MakeMoveCommand command){
         // gameDAO.
