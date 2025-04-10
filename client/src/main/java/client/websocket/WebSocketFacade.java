@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 //need to extend Endpoint for websocket to work properly
+@ClientEndpoint
 public class WebSocketFacade extends Endpoint {
 
     Session session;

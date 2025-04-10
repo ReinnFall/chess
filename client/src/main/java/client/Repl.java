@@ -20,7 +20,7 @@ public class Repl implements ServerMessageHandler {
     private String serverUrl;
     int gameID;
     ChessGame.TeamColor playerColor;
-    TerminalChessBoard chessboardPrinter;
+    TerminalChessBoard chessboardPrinter = new TerminalChessBoard();
 
 
     public Repl(String serverUrl)  {
@@ -67,8 +67,8 @@ public class Repl implements ServerMessageHandler {
                         playerColor = server.getPlayerColor();
 
                         client = new InGameClient(server,this,serverUrl,gameID,playerColor);
-                        System.out.print("Entered game as a player");
-                        System.out.print(client.printPrompt());
+                        //System.out.print("Entered game as a player");
+                        //System.out.print(client.printPrompt());
                         break;
                     case "watch game":
                         gameID = server.getGameID();
@@ -88,9 +88,7 @@ public class Repl implements ServerMessageHandler {
                 System.out.print(msg);
             }
         }
-        //System.out.println();
     }
-    //doesnt handle load game
     public void notify(String message) {
         ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
 
