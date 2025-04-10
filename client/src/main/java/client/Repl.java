@@ -3,7 +3,12 @@ package client;
 import chess.ChessGame;
 import client.websocket.ServerMessageHandler;
 import client.websocket.WebSocketFacade;
+import com.google.gson.Gson;
 import exception.ResponseException;
+import websocket.commands.MakeMoveCommand;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.util.Scanner;
@@ -13,6 +18,8 @@ public class Repl implements ServerMessageHandler {
     private ServerFacade server;
     private WebSocketFacade websocket;
     private String serverUrl;
+    int gameID;
+    ChessGame.TeamColor playerColor;
 
 
     public Repl(String serverUrl)  {
@@ -54,11 +61,20 @@ public class Repl implements ServerMessageHandler {
                         System.out.print("Successfully Logged Out");
                         System.out.print(client.printPrompt());
                         break;
-                    case "into game":
-                        int gameID = server.getGameID();
-                        ChessGame.TeamColor playerColor = server.getPlayerColor();
+                    case "join game":
+                        gameID = server.getGameID();
+                        playerColor = server.getPlayerColor();
+
                         client = new InGameClient(server,this,serverUrl,gameID,playerColor);
-                        System.out.print("Entered game");
+                        System.out.print("Entered game as a player");
+                        System.out.print(client.printPrompt());
+                        break;
+                    case "watch game":
+                        gameID = server.getGameID();
+                        playerColor = null;
+
+                        client = new InGameClient(server,this,serverUrl,gameID,playerColor);
+                        System.out.print("Entered game as an observer");
                         System.out.print(client.printPrompt());
                         break;
                     default:
@@ -74,9 +90,24 @@ public class Repl implements ServerMessageHandler {
         //System.out.println();
     }
     //doesnt handle load game
-    public void notify(ServerMessage serverMessage) {
+    public void notify(String message) {
         //Need to add a method to serverMessage to be able to print out message
-        //System.out.println(serverMessage.message());
-        //printPrompt();
+        ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+
+        switch (serverMessage.getServerMessageType()) {
+            case LOAD_GAME -> loadGame(new Gson().fromJson(message, LoadGameMessage.class));
+            case ERROR -> displayError(new Gson().fromJson(message, ErrorMessage.class));
+            case NOTIFICATION -> displayNotification(new Gson().fromJson(message, NotificationMessage.class));
+        }
     }
+
+    private void displayNotification(NotificationMessage notificationMessage) {
+    }
+
+    private void displayError(ErrorMessage errorMessage) {
+    }
+
+    private void loadGame(LoadGameMessage loadGameMessage) {
+    }
+
 }

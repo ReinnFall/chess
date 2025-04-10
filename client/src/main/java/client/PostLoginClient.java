@@ -4,10 +4,7 @@ import chess.ChessGame;
 import exception.ResponseException;
 import model.GameData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class PostLoginClient implements ClientState{
     private final ServerFacade server;
@@ -56,13 +53,14 @@ public class PostLoginClient implements ClientState{
             int trueIndex = requestedGameNumber - 1;
             GameData selectedGame = storedGames.get(trueIndex);
             int trueGameID = selectedGame.gameID();
+            server.setGameID(trueGameID);
 
-            ChessGame currentChessGame = selectedGame.game();
-            //default to white view
-            ChessGame.TeamColor playerTeam = ChessGame.TeamColor.WHITE;
-            chessboard.printChessBoard(currentChessGame, playerTeam);
+            //MOVE THIS TO IN GAME CLIENT
+//            ChessGame currentChessGame = selectedGame.game();
+//            ChessGame.TeamColor playerTeam = ChessGame.TeamColor.WHITE;
+//            chessboard.printChessBoard(currentChessGame, playerTeam);
 
-            return "into game";
+            return "watch game";
         } catch (Exception ex) {
             return "Unable to watch - check input";
         }
@@ -87,21 +85,24 @@ public class PostLoginClient implements ClientState{
             int trueIndex = requestedGameNumber - 1;
             GameData selectedGame = storedGames.get(trueIndex);
             int trueGameID = selectedGame.gameID();
+            server.setGameID(trueGameID);
 
             requestedTeamColor = requestedTeamColor.toUpperCase();
             server.joinGame(trueGameID, requestedTeamColor);
 
-            ChessGame currentChessGame = selectedGame.game();
             ChessGame.TeamColor playerTeam;
             if(requestedTeamColor.equalsIgnoreCase("white")){
                 playerTeam = ChessGame.TeamColor.WHITE;
             } else{
                 playerTeam = ChessGame.TeamColor.BLACK;
             }
+            server.setPlayerColor(playerTeam);
 
-            chessboard.printChessBoard(currentChessGame,playerTeam);
+//            MOVE THIS TO IN GAME CLIENT
+//            ChessGame currentChessGame = selectedGame.game();
+//            chessboard.printChessBoard(currentChessGame,playerTeam);
 
-            return "into game";
+            return "join game";
         } catch (Exception ex){
             return "Unable to join the game - check input";
         }

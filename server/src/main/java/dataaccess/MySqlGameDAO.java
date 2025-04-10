@@ -137,19 +137,20 @@ public class MySqlGameDAO implements GameDAO{
             if(currentGame.whiteUsername() != null){
                 throw new DataAccessException(403, "Error: already taken");
             }
-            statement = "UPDATE GameData SET whiteUsername = ? WHERE gameID = ?";
+            statement = "UPDATE GameData SET whiteUsername = ?, game = ? WHERE gameID = ?";
         } else if (Objects.equals(playerColor,"BLACK")){
             if(currentGame.blackUsername() != null){
                 throw new DataAccessException(403, "Error: already taken");
             }
-            statement = "UPDATE GameData SET blackUsername = ? WHERE gameID = ?";
+            statement = "UPDATE GameData SET blackUsername = ?, game = ? WHERE gameID = ?";
         } else{
             throw new DataAccessException(400,"Error: bad request");
         }
         try (var connection = DatabaseManager.getConnection()){
             try(PreparedStatement stmt = connection.prepareStatement(statement)){
                 stmt.setString(1,username);
-                stmt.setInt(2,gameData.gameID());
+                stmt.setString(2, serializer(gameData.game()));
+                stmt.setInt(3,gameData.gameID());
                 stmt.executeUpdate();
             }
         }catch(Exception ex){
