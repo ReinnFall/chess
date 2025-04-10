@@ -20,6 +20,7 @@ public class Repl implements ServerMessageHandler {
     private String serverUrl;
     int gameID;
     ChessGame.TeamColor playerColor;
+    TerminalChessBoard chessboardPrinter;
 
 
     public Repl(String serverUrl)  {
@@ -91,7 +92,6 @@ public class Repl implements ServerMessageHandler {
     }
     //doesnt handle load game
     public void notify(String message) {
-        //Need to add a method to serverMessage to be able to print out message
         ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
 
         switch (serverMessage.getServerMessageType()) {
@@ -102,12 +102,14 @@ public class Repl implements ServerMessageHandler {
     }
 
     private void displayNotification(NotificationMessage notificationMessage) {
+
     }
 
     private void displayError(ErrorMessage errorMessage) {
     }
 
-    private void loadGame(LoadGameMessage loadGameMessage) {
+    private void loadGame(LoadGameMessage loadGameMessage)  {
+        chessboardPrinter.printChessBoard(loadGameMessage.getGame(),playerColor);
     }
 
 }

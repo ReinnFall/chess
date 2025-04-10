@@ -19,6 +19,7 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
     //Need to modify to only broadcast to the specific game not all clients
+    //Filter by gameID
     public void broadcast(String excludeVisitorName, ServerMessage notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {

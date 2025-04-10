@@ -13,7 +13,7 @@ import static ui.EscapeSequences.*;
 
 public class TerminalChessBoard{
 
-    public void printChessBoard(ChessGame game,ChessGame.TeamColor color) throws Exception {
+    public void printChessBoard(ChessGame game,ChessGame.TeamColor color)  {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         ChessBoard currentBoard = game.getBoard();
         char[] columns;
@@ -90,7 +90,7 @@ public class TerminalChessBoard{
         out.print(RESET_BG_COLOR);
         out.println();
     }
-    private int columnIndexer(char columnLetter) throws Exception {
+    private int columnIndexer(char columnLetter)  {
         int columnNumber = 0;
 
         switch(columnLetter){
@@ -119,7 +119,7 @@ public class TerminalChessBoard{
                 columnNumber = 8;
                 break;
             default:
-                throw new Exception("Internal error");
+                break;
         }
         return columnNumber;
     }
