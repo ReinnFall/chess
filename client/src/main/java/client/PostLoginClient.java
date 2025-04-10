@@ -12,6 +12,7 @@ public class PostLoginClient implements ClientState{
     private List<GameData> storedGames = new ArrayList<>();
     private TerminalChessBoard chessboard = new TerminalChessBoard();
 
+
     public PostLoginClient(ServerFacade server)  {
         this.server = server;
     }

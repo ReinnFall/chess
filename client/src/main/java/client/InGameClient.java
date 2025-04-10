@@ -14,12 +14,14 @@ public class InGameClient implements ClientState{
     private WebSocketFacade ws;
     private final int gameID;
     private final ChessGame.TeamColor playerColor;
+    private Position position;
 
-    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl, int gameID, ChessGame.TeamColor playerColor)  {
+    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl, int gameID, ChessGame.TeamColor playerColor, Position position)  {
         this.server = server;
         this.messageHandler = messageHandler;
         this.gameID = gameID;
         this.playerColor = playerColor;
+        this.position = position;
         try{
             ws = new WebSocketFacade(serverUrl,messageHandler);
             ws.connectToGame(server.getAuth(),gameID);
