@@ -25,7 +25,7 @@ import java.util.Objects;
 @WebSocket
 public class WebSocketHandler {
 
-    private final ConnectionManager connections = new ConnectionManager();
+    private static final ConnectionManager connections = new ConnectionManager();
     UserDAO userDAO;
     AuthDAO authDAO;
     GameDAO gameDAO;

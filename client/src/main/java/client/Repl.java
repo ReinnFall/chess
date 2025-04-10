@@ -100,7 +100,7 @@ public class Repl implements ServerMessageHandler {
     }
 
     private void displayNotification(NotificationMessage notificationMessage) {
-
+        System.out.println(notificationMessage.getNotification());
     }
 
     private void displayError(ErrorMessage errorMessage) {

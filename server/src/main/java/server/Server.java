@@ -47,6 +47,7 @@ public class Server {
         listGameService = new ListGameService(authDAO,gameDAO);
         joinGameService = new JoinGameService(authDAO,gameDAO);
 
+
         webSocketHandler = new WebSocketHandler(userDAO,authDAO,gameDAO);
     }
 
