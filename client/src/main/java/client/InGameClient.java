@@ -25,7 +25,7 @@ public class InGameClient implements ClientState{
             ws.connectToGame(server.getAuth(),gameID);
 
         } catch(ResponseException ex){
-            System.out.println("Failed to connect to game");
+            System.out.println("Failed to connect to a game");
         }
 
     }
