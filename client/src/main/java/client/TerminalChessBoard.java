@@ -8,12 +8,13 @@ import exception.ResponseException;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 import static ui.EscapeSequences.*;
 
 public class TerminalChessBoard{
 
-    public void printChessBoard(ChessGame game,ChessGame.TeamColor color)  {
+    public void printChessBoard(ChessGame game, ChessGame.TeamColor color, ChessPosition positionofPiece, Set<ChessPosition> highlightedPositions)  {
         var out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         ChessBoard currentBoard = game.getBoard();
         char[] columns;
@@ -50,6 +51,20 @@ public class TerminalChessBoard{
                 ChessPiece currentPiece = currentBoard.getPiece(currentPosition);
 
                 //Chess Background Color
+                boolean isHighlighted = false;
+                if(highlightedPositions != null){
+                    if(highlightedPositions.contains(currentPosition)){
+                        isHighlighted = true;
+                    }
+                }
+                boolean isSelectedPiece = false;
+                if(positionofPiece != null){
+                    if(currentPosition == positionofPiece){
+                        isSelectedPiece = true;
+                    }
+                }
+
+
                 int sumPosition = row + column;
                 boolean isEven = (sumPosition % 2 == 1);
                 boolean isLight;
@@ -66,6 +81,12 @@ public class TerminalChessBoard{
                     backgroundColor = SET_BG_COLOR_BLUE;
                 } else {
                     backgroundColor = SET_BG_COLOR_BLACK;
+                }
+                if(isHighlighted){
+                    backgroundColor = SET_BG_COLOR_GREEN;
+                }
+                if(isSelectedPiece){
+                    backgroundColor = SET_BG_COLOR_GREEN;
                 }
                 out.print(backgroundColor);
 

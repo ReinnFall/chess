@@ -1,11 +1,16 @@
 package client;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPosition;
 import client.websocket.ServerMessageHandler;
 import client.websocket.WebSocketFacade;
 import exception.ResponseException;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class InGameClient implements ClientState{
     private final ServerFacade server;
@@ -63,6 +68,33 @@ public class InGameClient implements ClientState{
     }
 
     private String highlight(String[] params) {
+        if(params.length != 1){
+            return "Invalid input";
+        }
+        String locationOnBoard = params[0];
+
+        if(locationOnBoard.length() != 2){
+            return "Bad input";
+        }
+        char columnChar = locationOnBoard.charAt(0);
+        char rowChar = locationOnBoard.charAt(1);
+
+        int column = columnChar - 'a' + 1; //converts a-h to 1-8
+        int row = Character.getNumericValue(rowChar); //char to int
+
+        //Make a check for valid column and row inputs
+
+        ChessPosition positionOFPiece = new ChessPosition(row,column);
+        Collection<ChessMove> possibleMoves = currentGame.validMoves(positionOFPiece);
+        if (possibleMoves == null || possibleMoves.isEmpty()){
+            return "There are no possible moves";
+        }
+
+        Set<ChessPosition> endPositions = new HashSet<>();
+        for (ChessMove move : possibleMoves){
+            endPositions.add(move.getEndPosition());
+        }
+        chessboardPrinter.printChessBoard(currentGame,playerColor,positionOFPiece,endPositions);
         return "";
     }
 
@@ -76,7 +108,7 @@ public class InGameClient implements ClientState{
     }
 
     private String redraw() {
-        chessboardPrinter.printChessBoard(currentGame,playerColor);
+        chessboardPrinter.printChessBoard(currentGame,playerColor,null,null);
 
         return "";
     }

@@ -110,7 +110,7 @@ public class Repl implements ServerMessageHandler {
     }
 
     private void loadGame(LoadGameMessage loadGameMessage)  {
-        chessboardPrinter.printChessBoard(loadGameMessage.getGame(),playerColor);
+        chessboardPrinter.printChessBoard(loadGameMessage.getGame(),playerColor,null,null);
         if (client instanceof InGameClient inGameClient){
             inGameClient.setGame(loadGameMessage.getGame());
         }
