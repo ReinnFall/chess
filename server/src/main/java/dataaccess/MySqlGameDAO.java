@@ -157,4 +157,25 @@ public class MySqlGameDAO implements GameDAO{
             throw new DataAccessException(500,"Failed to update game");
         }
     }
+
+    @Override
+    public void removePlayer(int gameID, String playerColor) throws DataAccessException, SQLException {
+        String statement;
+        if(Objects.equals(playerColor, "WHITE")){
+            statement = "UPDATE GameData SET whiteUsername = NULL WHERE gameID = ?";
+        } else if (Objects.equals(playerColor, "BLACK")){
+            statement = "UPDATE GameData SET blackUsername = NULL WHERE gameID = ?";
+        } else{
+            throw new DataAccessException(400, "Error:Check color");
+        }
+        try (var connection = DatabaseManager.getConnection()){
+            try(PreparedStatement stmt = connection.prepareStatement(statement)){
+                stmt.setInt(1,gameID);
+                stmt.executeUpdate();
+            }
+        } catch(Exception ex){
+            throw new DataAccessException(500, "Failed to remove player");
+        }
+    }
+
 }

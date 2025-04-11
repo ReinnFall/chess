@@ -39,9 +39,9 @@ public class WebSocketHandler {
     public void onMessage(Session session, String message) throws IOException, DataAccessException, SQLException {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class); // gets type
         switch (command.getCommandType()) {
-            case CONNECT -> connect(session,command);
+            case CONNECT -> connect(session, command);
             case MAKE_MOVE -> makeMOVE(new Gson().fromJson(message, MakeMoveCommand.class)); //deserialize a second time to get the move
-            case LEAVE -> leave();
+            case LEAVE -> leave(session, command);
             case RESIGN -> resign();
         }
     }
@@ -61,11 +61,6 @@ public class WebSocketHandler {
             //throw and error
             return;
         }
-        connections.add(username,session,gameID);
-
-        LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
-        session.getRemote().sendString(new Gson().toJson(loadGameMessage));
-
         String position;
         if (Objects.equals(username, gameData.whiteUsername())){
             position = "WHITE";
@@ -75,6 +70,11 @@ public class WebSocketHandler {
             position = "observer";
         }
 
+        connections.add(username,session,gameID,position);
+
+        LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
+        session.getRemote().sendString(new Gson().toJson(loadGameMessage));
+
         String joinOrWatchMessage = username + " entered the game as " + position;
         NotificationMessage notificationMessage = new NotificationMessage(joinOrWatchMessage);
         connections.broadcast(username,notificationMessage,gameID);
@@ -82,8 +82,33 @@ public class WebSocketHandler {
     private void makeMOVE(MakeMoveCommand command){
         // gameDAO.
     }
-    private void leave(){
+    private void leave(Session session, UserGameCommand command) throws DataAccessException, SQLException, IOException {
+        String authToken = command.getAuthToken();
+        int gameID = command.getGameID();
 
+        AuthData authFromDB = authDAO.getAuth(authToken);
+        if(authFromDB == null){
+            //throw an error
+            return;
+        }
+        String username = authFromDB.username();
+        GameData gameData = gameDAO.getGame(gameID);
+        if(gameData.game() == null){
+            //throw and error
+            return;
+        }
+        //remove from gamedao
+        Connection connection = connections.getConnection(username);
+        if (connection != null){
+            if(Objects.equals(connection.getPosition(), "BLACK") || Objects.equals(connection.getPosition(), "WHITE")){
+                gameDAO.removePlayer(gameID, connection.position);
+            }
+        }
+        connections.remove(username);
+        //broadcast leave to others in the game
+        String leaveMessage = username + " has left the game.";
+        NotificationMessage notificationMessage = new NotificationMessage(leaveMessage);
+        connections.broadcast(username,notificationMessage,gameID);
     }
     private void resign(){
 

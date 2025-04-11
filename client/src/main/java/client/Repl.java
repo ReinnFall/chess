@@ -60,7 +60,7 @@ public class Repl implements ServerMessageHandler {
                         break;
                     case "leave":
                         client = new PostLoginClient(server);
-                        System.out.print("Successfully Logged Out");
+                        System.out.print("Exited Game");
                         System.out.print(client.printPrompt());
                         break;
                     case "join game":

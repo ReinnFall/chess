@@ -54,7 +54,8 @@ public class InGameClient implements ClientState{
         }
     }
 
-    private String leave() {
+    private String leave() throws ResponseException {
+        ws.leaveGame(server.getAuth(),gameID);
         return "leave";
     }
 
