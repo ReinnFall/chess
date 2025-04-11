@@ -15,6 +15,9 @@ public class InGameClient implements ClientState{
     private final int gameID;
     private final ChessGame.TeamColor playerColor;
     private Position position;
+    private ChessGame currentGame;
+    TerminalChessBoard chessboardPrinter = new TerminalChessBoard();
+
 
     public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl, int gameID, ChessGame.TeamColor playerColor, Position position)  {
         this.server = server;
@@ -73,6 +76,8 @@ public class InGameClient implements ClientState{
     }
 
     private String redraw() {
+        chessboardPrinter.printChessBoard(currentGame,playerColor);
+
         return "";
     }
 
@@ -88,14 +93,17 @@ public class InGameClient implements ClientState{
         Help:                  "help"
         """;
     }
+    public void setGame(ChessGame game){
+        currentGame = game;
+    }
 
     @Override
     public String printPrompt() {
         String status;
-        if(state == State.SIGNEDOUT){
-            status = "[LOGGED OUT] ";
+        if(position == Position.PLAYER){
+            status = "[PLAYER] ";
         } else{
-            status = "[LOGGED IN] ";
+            status = "[OBSERVER] ";
         }
         return ("\n" + status + ">>> " );
     }
