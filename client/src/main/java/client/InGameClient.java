@@ -63,7 +63,8 @@ public class InGameClient implements ClientState{
         return "";
     }
 
-    private String resign() {
+    private String resign() throws ResponseException {
+        ws.giveUp(server.getAuth(),gameID);
         return "";
     }
 

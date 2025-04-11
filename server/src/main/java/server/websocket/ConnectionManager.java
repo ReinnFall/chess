@@ -20,7 +20,7 @@ public class ConnectionManager {
     }
     //Need to modify to only broadcast to the specific game not all clients
     //Filter by gameID
-    public void broadcast(String excludeVisitorName, ServerMessage notification, int gameID) throws IOException {
+    public void broadcastExceptInitialzer(String excludeVisitorName, ServerMessage notification, int gameID) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
@@ -31,7 +31,22 @@ public class ConnectionManager {
                 removeList.add(c);
             }
         }
-
+        // Clean up any connections that were left open.
+        for (var c : removeList) {
+            connections.remove(c.visitorName);
+        }
+    }
+    public void broadcastIncludingInitializer(String excludeVisitorName, ServerMessage notification, int gameID) throws IOException {
+        var removeList = new ArrayList<Connection>();
+        for (var c : connections.values()) {
+            if (c.session.isOpen()) {
+                if (c.getID() == gameID) {
+                    c.send(notification.toString());
+                }
+            } else {
+                removeList.add(c);
+            }
+        }
         // Clean up any connections that were left open.
         for (var c : removeList) {
             connections.remove(c.visitorName);
