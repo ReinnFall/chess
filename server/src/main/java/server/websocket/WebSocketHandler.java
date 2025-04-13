@@ -215,6 +215,13 @@ public class WebSocketHandler {
             session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
+        if (!Objects.equals(username, gameData.whiteUsername())){
+            if(!Objects.equals(username, gameData.blackUsername())){
+                ErrorMessage error = new ErrorMessage("Error: Only players can resign");
+                session.getRemote().sendString(new Gson().toJson(error));
+                return;
+            }
+        }
 
         currentGame.setGameStatus(true);
         gameDAO.updateGame(gameData,null,null);
