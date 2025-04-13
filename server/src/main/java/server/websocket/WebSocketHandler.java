@@ -101,7 +101,14 @@ public class WebSocketHandler {
         }
 
         String username = authFromDB.username();
+
         GameData gameData = gameDAO.getGame(gameID);
+
+        if(gameData == null){
+            ErrorMessage error = new ErrorMessage("Error: Game not found");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
         if(gameData.game() == null){
             ErrorMessage error = new ErrorMessage("Error: Game not found");
             session.getRemote().sendString(new Gson().toJson(error));
@@ -109,7 +116,15 @@ public class WebSocketHandler {
         }
         GameData currentGameData = gameDAO.getGame(gameID);
         ChessGame currentGame = currentGameData.game();
-        currentGame.makeMove(move);
+
+        try{
+            currentGame.makeMove(move);
+        }catch(InvalidMoveException ex){
+            ErrorMessage error = new ErrorMessage("Error: Invalid move");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
+
 
         GameData moveMadeGame = new GameData(gameID, currentGameData.whiteUsername(),
                 currentGameData.blackUsername(), gameData.gameName(),currentGame);
