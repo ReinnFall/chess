@@ -117,6 +117,23 @@ public class WebSocketHandler {
         GameData currentGameData = gameDAO.getGame(gameID);
         ChessGame currentGame = currentGameData.game();
 
+        String playerColor;
+
+        if(Objects.equals(username, currentGameData.whiteUsername())){
+            playerColor = "WHITE";
+        } else if (Objects.equals(username, currentGameData.blackUsername())){
+            playerColor = "BLACK";
+        } else{
+            ErrorMessage error = new ErrorMessage("Error: You are not listed as a player in this game");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
+        ChessGame.TeamColor teamTurn = currentGame.getTeamTurn();
+        if(!playerColor.equals(teamTurn.toString())){
+            ErrorMessage error = new ErrorMessage("Error: Not your turn");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
         try{
             currentGame.makeMove(move);
         }catch(InvalidMoveException ex){
