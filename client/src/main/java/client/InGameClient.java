@@ -99,6 +99,9 @@ public class InGameClient implements ClientState{
     }
 
     private String resign() throws ResponseException {
+        if(position == Position.OBSERVER){
+            return "Only players may resign";
+        }
         ws.giveUp(server.getAuth(),gameID);
         return "";
     }

@@ -13,6 +13,7 @@ import java.util.Objects;
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard gameBoard;
+    private boolean isOver;
 
     public ChessGame() {
         teamTurn = TeamColor.WHITE; ///White team starts
@@ -23,6 +24,7 @@ public class ChessGame {
     public ChessGame(TeamColor turn,ChessBoard board){
         teamTurn = turn;
         gameBoard = board;
+        isOver = false;
     }
 
     @Override
@@ -58,6 +60,12 @@ public class ChessGame {
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+    public boolean isOver(){
+        return isOver;
+    }
+    public void setGameStatus(boolean status){
+        isOver = status;
     }
     public ChessBoard createSimBoard(){
         ChessBoard simBoard = new ChessBoard();

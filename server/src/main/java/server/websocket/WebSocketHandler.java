@@ -116,7 +116,11 @@ public class WebSocketHandler {
         }
         GameData currentGameData = gameDAO.getGame(gameID);
         ChessGame currentGame = currentGameData.game();
-
+        if(currentGame.isOver() == true){
+            ErrorMessage error = new ErrorMessage("Error: Game is over. No more moves can be made");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
         String playerColor;
 
         if(Objects.equals(username, currentGameData.whiteUsername())){
@@ -205,6 +209,15 @@ public class WebSocketHandler {
             return;
         }
         // change isOver on chessGame to true
+        ChessGame currentGame = gameData.game();
+        if(currentGame.isOver() == true){
+            ErrorMessage error = new ErrorMessage("Error: Game is already over");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
+
+        currentGame.setGameStatus(true);
+        gameDAO.updateGame(gameData,null,null);
         //output message
         String leaveMessage = username + " resigned.";
         NotificationMessage notificationMessage = new NotificationMessage(leaveMessage);
