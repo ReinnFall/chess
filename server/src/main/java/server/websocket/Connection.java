@@ -1,7 +1,9 @@
 package server.websocket;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 
@@ -20,6 +22,10 @@ public class Connection {
 
     public void send(String msg) throws IOException {
         session.getRemote().sendString(msg);
+    }
+    public void send(ServerMessage msg) throws IOException {
+        String json = new Gson().toJson(msg);
+        session.getRemote().sendString(json);
     }
     public int getID(){
         return gameID;

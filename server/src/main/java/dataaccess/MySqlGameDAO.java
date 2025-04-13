@@ -131,8 +131,21 @@ public class MySqlGameDAO implements GameDAO{
         if (currentGame == null){
             throw new DataAccessException(404, "Game not found");
         }
-
         String statement;
+        if (playerColor == null && username == null) {
+            statement = "UPDATE GameData SET game = ? WHERE gameID = ?";
+            try (var connection = DatabaseManager.getConnection()) {
+                try (PreparedStatement stmt = connection.prepareStatement(statement)) {
+                    stmt.setString(1, serializer(gameData.game()));
+                    stmt.setInt(2, gameData.gameID());
+                    stmt.executeUpdate();
+                }
+            } catch (SQLException ex) {
+                throw new DataAccessException(500, "Failed to update game");
+            }
+            return;
+        }
+
         if (Objects.equals(playerColor, "WHITE")){
             if(currentGame.whiteUsername() != null){
                 throw new DataAccessException(403, "Error: already taken");

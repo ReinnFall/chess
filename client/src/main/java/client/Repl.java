@@ -81,6 +81,8 @@ public class Repl implements ServerMessageHandler {
 //                      System.out.print("Entered game as an observer");
 //                      System.out.print(client.printPrompt());
                         break;
+                    case "":
+                        //do nothing
                     default:
                         System.out.print(result);
                         System.out.print(client.printPrompt());
@@ -114,6 +116,7 @@ public class Repl implements ServerMessageHandler {
         if (client instanceof InGameClient inGameClient){
             inGameClient.setGame(loadGameMessage.getGame());
         }
+        //System.out.print(client.printPrompt());
     }
 
 }

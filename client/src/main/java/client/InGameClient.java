@@ -95,7 +95,7 @@ public class InGameClient implements ClientState{
             endPositions.add(move.getEndPosition());
         }
         chessboardPrinter.printChessBoard(currentGame,playerColor,positionOFPiece,endPositions);
-        return "";
+        return "Possible moves are marked by green squares";
     }
 
     private String resign() throws ResponseException {
@@ -103,7 +103,32 @@ public class InGameClient implements ClientState{
         return "";
     }
 
-    private String makeMove(String... params) {
+    private String makeMove(String... params) throws ResponseException {
+        if(params.length != 2){
+            return "Invalid input";
+        }
+        String startLocation = params[0];
+        String endLocation = params[1];
+
+        if(startLocation.length() != 2 || endLocation.length() !=2){
+            return "Bad input";
+        }
+        char columnCharStart = startLocation.charAt(0);
+        char rowCharStart = startLocation.charAt(1);
+        int columnStart = columnCharStart - 'a' + 1; //converts a-h to 1-8
+        int rowStart = Character.getNumericValue(rowCharStart); //char to int
+
+        ChessPosition startPosition = new ChessPosition(rowStart,columnStart);
+
+        char columnCharEnd = endLocation.charAt(0);
+        char rowCharEnd = endLocation.charAt(1);
+        int columnEnd = columnCharEnd - 'a' + 1; //converts a-h to 1-8
+        int rowEnd = Character.getNumericValue(rowCharEnd); //char to int
+
+        ChessPosition endPosition = new ChessPosition(rowEnd,columnEnd);
+
+        ChessMove move = new ChessMove(startPosition,endPosition,null);
+        ws.makeMove(server.getAuth(),gameID,move);
         return "";
     }
 
@@ -131,12 +156,13 @@ public class InGameClient implements ClientState{
 
     @Override
     public String printPrompt() {
-        String status;
-        if(position == Position.PLAYER){
-            status = "[PLAYER] ";
-        } else{
-            status = "[OBSERVER] ";
-        }
-        return ("\n" + status + ">>> " );
+//        String status;
+//        if(position == Position.PLAYER){
+//            status = "[PLAYER] ";
+//        } else{
+//            status = "[OBSERVER] ";
+//        }
+//        return ("\n" + status + ">>> " );
+        return "";
     }
 }

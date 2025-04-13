@@ -89,7 +89,7 @@ public class SequelGameTests {
     public void updateGamePositive() throws DataAccessException, SQLException {
         int gameID = gameDAO.createGame("Losers");
         GameData testGame = gameDAO.getGame(gameID);
-        gameDAO.updateGamePlayers(testGame,"WHITE","James");
+        gameDAO.updateGame(testGame,"WHITE","James");
 
         GameData checkUpdate = gameDAO.getGame(gameID);
         assertEquals(checkUpdate.whiteUsername(),"James");
@@ -98,10 +98,10 @@ public class SequelGameTests {
     public void updateGameNegative() throws DataAccessException, SQLException{
         int gameID = gameDAO.createGame("Losers");
         GameData testGame = gameDAO.getGame(gameID);
-        gameDAO.updateGamePlayers(testGame,"WHITE","James");
+        gameDAO.updateGame(testGame,"WHITE","James");
 
         DataAccessException ex = Assertions.assertThrows(DataAccessException.class, () ->{
-            gameDAO.updateGamePlayers(testGame,"WHITE","Jacob");
+            gameDAO.updateGame(testGame,"WHITE","Jacob");
         });
     }
 }

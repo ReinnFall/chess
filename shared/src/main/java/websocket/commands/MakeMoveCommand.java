@@ -1,8 +1,15 @@
 package websocket.commands;
 
-public class MakeMoveCommand extends UserGameCommand{
+import chess.ChessMove;
 
-    public MakeMoveCommand(CommandType commandType, String authToken, Integer gameID) {
+public class MakeMoveCommand extends UserGameCommand{
+    private final ChessMove move;
+
+    public MakeMoveCommand(CommandType commandType, String authToken, int gameID, ChessMove move) {
         super(commandType, authToken, gameID);
+        this.move = move;
+    }
+    public ChessMove getMove(){
+        return move;
     }
 }
