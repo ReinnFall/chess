@@ -16,6 +16,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 //import org.eclipse.jetty.websocket.client.io.ConnectionManager;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 
@@ -41,7 +42,7 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class); // gets type
         switch (command.getCommandType()) {
             case CONNECT -> connect(session, command);
-            case MAKE_MOVE -> makeMove(new Gson().fromJson(message, MakeMoveCommand.class)); //deserialize a second time to get the move
+            case MAKE_MOVE -> makeMove(session, new Gson().fromJson(message, MakeMoveCommand.class)); //deserialize a second time to get the move
             case LEAVE -> leave(session, command);
             case RESIGN -> resign(session,command);
         }
@@ -52,14 +53,21 @@ public class WebSocketHandler {
 
         AuthData authFromDB = authDAO.getAuth(authToken);
         if(authFromDB == null){
-            //throw an error
+            ErrorMessage error = new ErrorMessage("Error: Not Authorized");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
 
         String username = authFromDB.username();
         GameData gameData = gameDAO.getGame(gameID);
+        if(gameData == null){
+            ErrorMessage error = new ErrorMessage("Error: Game not found");
+            session.getRemote().sendString(new Gson().toJson(error));
+            return;
+        }
         if(gameData.game() == null){
-            //throw and error
+            ErrorMessage error = new ErrorMessage("Error: Game not found");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         String position;
@@ -80,21 +88,23 @@ public class WebSocketHandler {
         NotificationMessage notificationMessage = new NotificationMessage(joinOrWatchMessage);
         connections.broadcastExceptInitializer(username,notificationMessage,gameID);
     }
-    private void makeMove(MakeMoveCommand command) throws DataAccessException, SQLException, InvalidMoveException, IOException {
+    private void makeMove(Session session, MakeMoveCommand command) throws DataAccessException, SQLException, InvalidMoveException, IOException {
         String authToken = command.getAuthToken();
         int gameID = command.getGameID();
         ChessMove move = command.getMove();
 
         AuthData authFromDB = authDAO.getAuth(authToken);
         if(authFromDB == null){
-            //throw an error
+            ErrorMessage error = new ErrorMessage("Error: Not Authorized");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
 
         String username = authFromDB.username();
         GameData gameData = gameDAO.getGame(gameID);
         if(gameData.game() == null){
-            //throw and error
+            ErrorMessage error = new ErrorMessage("Error: Game not found");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         GameData currentGameData = gameDAO.getGame(gameID);
@@ -121,13 +131,15 @@ public class WebSocketHandler {
 
         AuthData authFromDB = authDAO.getAuth(authToken);
         if(authFromDB == null){
-            //throw an error
+            ErrorMessage error = new ErrorMessage("Error: Not Authorized");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         String username = authFromDB.username();
         GameData gameData = gameDAO.getGame(gameID);
         if(gameData.game() == null){
-            //throw and error
+            ErrorMessage error = new ErrorMessage("Error: Game not found");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         //remove from gamedao
@@ -149,13 +161,15 @@ public class WebSocketHandler {
 
         AuthData authFromDB = authDAO.getAuth(authToken);
         if(authFromDB == null){
-            //throw an error
+            ErrorMessage error = new ErrorMessage("Error: Not Authorized");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         String username = authFromDB.username();
         GameData gameData = gameDAO.getGame(gameID);
         if(gameData.game() == null){
-            //throw and error
+            ErrorMessage error = new ErrorMessage("Error: Game not found");
+            session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         // change isOver on chessGame to true
