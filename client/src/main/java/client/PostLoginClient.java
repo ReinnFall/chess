@@ -56,11 +56,6 @@ public class PostLoginClient implements ClientState{
             int trueGameID = selectedGame.gameID();
             server.setGameID(trueGameID);
 
-            //MOVE THIS TO IN GAME CLIENT
-//            ChessGame currentChessGame = selectedGame.game();
-//            ChessGame.TeamColor playerTeam = ChessGame.TeamColor.WHITE;
-//            chessboard.printChessBoard(currentChessGame, playerTeam);
-
             return "watch game";
         } catch (Exception ex) {
             return "Unable to watch - check input";

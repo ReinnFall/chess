@@ -27,7 +27,7 @@ import java.util.Objects;
 @WebSocket
 public class WebSocketHandler {
 
-    private static final ConnectionManager connections = new ConnectionManager();
+    private static final ConnectionManager CONNECTIONS = new ConnectionManager();
     UserDAO userDAO;
     AuthDAO authDAO;
     GameDAO gameDAO;
@@ -79,14 +79,14 @@ public class WebSocketHandler {
             position = "observer";
         }
 
-        connections.add(username,session,gameID,position);
+        CONNECTIONS.add(username,session,gameID,position);
 
         LoadGameMessage loadGameMessage = new LoadGameMessage(gameData.game());
         session.getRemote().sendString(new Gson().toJson(loadGameMessage));
 
         String joinOrWatchMessage = username + " entered the game as " + position;
         NotificationMessage notificationMessage = new NotificationMessage(joinOrWatchMessage);
-        connections.broadcastExceptInitializer(username,notificationMessage,gameID);
+        CONNECTIONS.broadcastExceptInitializer(username,notificationMessage,gameID);
     }
     private void makeMove(Session session, MakeMoveCommand command) throws DataAccessException, SQLException, InvalidMoveException, IOException {
         String authToken = command.getAuthToken();
@@ -152,11 +152,11 @@ public class WebSocketHandler {
         gameDAO.updateGame(moveMadeGame,null,null);
 
         LoadGameMessage loadGame = new LoadGameMessage(currentGame);
-        connections.broadcastIncludingInitializer(username,loadGame,gameID);
+        CONNECTIONS.broadcastIncludingInitializer(username,loadGame,gameID);
 
         String notification = username + " moved from " + move.getStartPosition() + " to " + move.getEndPosition();
         NotificationMessage notifyMessage = new NotificationMessage(notification);
-        connections.broadcastExceptInitializer(username,notifyMessage,gameID);
+        CONNECTIONS.broadcastExceptInitializer(username,notifyMessage,gameID);
 
         //Handle Check/Checkmate
         ChessGame.TeamColor opponentColor = currentGame.getTeamTurn();
@@ -169,7 +169,7 @@ public class WebSocketHandler {
 
         if (currentGame.isInCheckmate(opponentColor)){
             NotificationMessage notify = new NotificationMessage(opponentUsername + " is in Check! Game is over.");
-            connections.broadcastIncludingInitializer(username,notify,gameID);
+            CONNECTIONS.broadcastIncludingInitializer(username,notify,gameID);
 
             currentGame.setGameStatus(true);
             GameData gameOver = new GameData(gameID, currentGameData.whiteUsername(),
@@ -179,38 +179,38 @@ public class WebSocketHandler {
 
         } else if (currentGame.isInCheck(opponentColor)){
             NotificationMessage notify = new NotificationMessage(opponentUsername + " is in CheckMate!");
-            connections.broadcastIncludingInitializer(username,notify,gameID);
+            CONNECTIONS.broadcastIncludingInitializer(username,notify,gameID);
         }
     }
     private void leave(Session session, UserGameCommand command) throws DataAccessException, SQLException, IOException {
-        String authToken = command.getAuthToken();
-        int gameID = command.getGameID();
+        int gameId = command.getGameID();
+        String auth = command.getAuthToken();
 
-        AuthData authFromDB = authDAO.getAuth(authToken);
+        AuthData authFromDB = authDAO.getAuth(auth);
         if(authFromDB == null){
             ErrorMessage error = new ErrorMessage("Error: Not Authorized");
             session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         String username = authFromDB.username();
-        GameData gameData = gameDAO.getGame(gameID);
+        GameData gameData = gameDAO.getGame(gameId);
         if(gameData.game() == null){
             ErrorMessage error = new ErrorMessage("Error: Game not found");
             session.getRemote().sendString(new Gson().toJson(error));
             return;
         }
         //remove from gamedao
-        Connection connection = connections.getConnection(username);
+        Connection connection = CONNECTIONS.getConnection(username);
         if (connection != null){
             if(Objects.equals(connection.getPosition(), "BLACK") || Objects.equals(connection.getPosition(), "WHITE")){
-                gameDAO.removePlayer(gameID, connection.position);
+                gameDAO.removePlayer(gameId, connection.position);
             }
         }
-        connections.remove(username);
+        CONNECTIONS.remove(username);
         //broadcast leave to others in the game
         String leaveMessage = username + " has left the game.";
         NotificationMessage notificationMessage = new NotificationMessage(leaveMessage);
-        connections.broadcastExceptInitializer(username,notificationMessage,gameID);
+        CONNECTIONS.broadcastExceptInitializer(username,notificationMessage,gameId);
     }
     private void resign(Session session, UserGameCommand command) throws DataAccessException, SQLException, IOException {
         String authToken = command.getAuthToken();
@@ -249,6 +249,6 @@ public class WebSocketHandler {
         //output message
         String leaveMessage = username + " resigned.";
         NotificationMessage notificationMessage = new NotificationMessage(leaveMessage);
-        connections.broadcastIncludingInitializer(username,notificationMessage,gameID);
+        CONNECTIONS.broadcastIncludingInitializer(username,notificationMessage,gameID);
     }
 }

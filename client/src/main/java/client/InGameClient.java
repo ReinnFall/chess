@@ -24,7 +24,8 @@ public class InGameClient implements ClientState{
     TerminalChessBoard chessboardPrinter = new TerminalChessBoard();
 
 
-    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl, int gameID, ChessGame.TeamColor playerColor, Position position)  {
+    public InGameClient(ServerFacade server, ServerMessageHandler messageHandler, String serverUrl,
+                        int gameID, ChessGame.TeamColor playerColor, Position position)  {
         this.server = server;
         this.messageHandler = messageHandler;
         this.gameID = gameID;
@@ -159,13 +160,6 @@ public class InGameClient implements ClientState{
 
     @Override
     public String printPrompt() {
-//        String status;
-//        if(position == Position.PLAYER){
-//            status = "[PLAYER] ";
-//        } else{
-//            status = "[OBSERVER] ";
-//        }
-//        return ("\n" + status + ">>> " );
         return "";
     }
 }
