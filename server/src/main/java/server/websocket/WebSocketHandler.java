@@ -159,7 +159,28 @@ public class WebSocketHandler {
         connections.broadcastExceptInitializer(username,notifyMessage,gameID);
 
         //Handle Check/Checkmate
+        ChessGame.TeamColor opponentColor = currentGame.getTeamTurn();
+        String opponentUsername;
+        if (opponentColor == ChessGame.TeamColor.WHITE){
+            opponentUsername = moveMadeGame.whiteUsername();
+        } else{
+            opponentUsername = moveMadeGame.blackUsername();
+        }
 
+        if (currentGame.isInCheckmate(opponentColor)){
+            NotificationMessage notify = new NotificationMessage(opponentUsername + " is in Check! Game is over.");
+            connections.broadcastIncludingInitializer(username,notify,gameID);
+
+            currentGame.setGameStatus(true);
+            GameData gameOver = new GameData(gameID, currentGameData.whiteUsername(),
+                    currentGameData.blackUsername(), gameData.gameName(),currentGame);
+
+            gameDAO.updateGame(gameOver,null,null);
+
+        } else if (currentGame.isInCheck(opponentColor)){
+            NotificationMessage notify = new NotificationMessage(opponentUsername + " is in CheckMate!");
+            connections.broadcastIncludingInitializer(username,notify,gameID);
+        }
     }
     private void leave(Session session, UserGameCommand command) throws DataAccessException, SQLException, IOException {
         String authToken = command.getAuthToken();
